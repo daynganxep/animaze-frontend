@@ -1,0 +1,73 @@
+/* @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Monoton&family=Plaster&family=Tiny5&family=Zen+Tokyo+Zoo&display=swap"); */
+
+/* {
+    font-family: "Noto Sans Mono", monospace;
+    font-optical-sizing: auto;
+    font-weight: 100px;
+    font-style: normal;
+    transition: color 0.25s, background-color 0.25s;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.tooltip-scroll {
+    max-height: 80vh;
+    overflow-y: auto;
+}
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+    background: #000000;
+}
+.error-validate-message {
+    text-align: end;
+    color: red;
+    margin-top: 4px;
+}
+
+.layout-part {
+    border-radius: 8px !important;
+    overflow: hidden;
+    border: 2px solid rgb(229, 233, 247) !important;
+} */
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* Modern high contrast support - replaces deprecated -ms-high-contrast */
+@media (forced-colors: active) {
+
+    /* Ensure proper contrast in high contrast mode */
+    * {
+        forced-color-adjust: auto;
+    }
+}
