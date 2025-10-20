@@ -12,6 +12,8 @@ const env = {
         1000 *
         0.9,
     google_client_id: getEnvValue("VITE_GOOGLE_CLIENT_ID", ""),
+    sector_size: _.toNumber(getEnvValue("VITE_SECTOR_SIZE", "256")),
+    frames_count: _.toNumber(getEnvValue("VITE_FRAMES_COUNT", "4")),
 };
 
 export default env;

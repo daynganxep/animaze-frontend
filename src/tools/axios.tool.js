@@ -19,9 +19,10 @@ axiosInstance.interceptors.request.use(
     },
 );
 
-export async function service(axiosPromise, getData = false) {
+export async function service(axiosPromise, getData = false, raw = false) {
     try {
         const response = await axiosPromise;
+        if (raw) return [response, null];
         const result = getData
             ? _.get(response, "data.data")
             : { ...response.data, status: response.status };
