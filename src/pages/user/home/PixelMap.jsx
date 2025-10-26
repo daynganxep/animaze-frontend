@@ -1,8 +1,10 @@
 import { MapContainer } from 'react-leaflet';
 import L from 'leaflet';
 import GridLayer from './GridLayer';
-import PixelTracker from './PixelTracker';
+import SectorLayer from './SectorLayer';
+import CoordinateNavigator from './CoordinateNavigator';
 import env from '@/configs/env.config';
+import PixelTracker from './PixelTracker';
 
 const WORLD_DIMENSION = env.canvas_size; // 256,000
 
@@ -33,7 +35,9 @@ export default function PixelMap() {
                 zoomSnap={-0.5} // Controls the snapping of zoom levels (e.g., 0.5 allows half-step zooms)
                 zoomDelta={0.25} // Controls the zoom step when using zoom controls or keyboard
             >
-                {/* <GridLayer /> */}
+                <GridLayer />
+                <SectorLayer />
+                <CoordinateNavigator />
                 <PixelTracker />
             </MapContainer>
         </div>
