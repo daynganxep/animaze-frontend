@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { useMap, useMapEvents } from 'react-leaflet';
+import { useMap, useMapEvents, LayerGroup } from 'react-leaflet';
 import L from 'leaflet';
 import SectorService from '@/services/sector.service';
 import { SECTOR_SIZE, SectorDataParser, FRAMES_COUNT } from '@/tools/data.tool';
@@ -66,6 +66,9 @@ function SectorLayer() {
                     canvas.width = SECTOR_SIZE;
                     canvas.height = SECTOR_SIZE;
                     const ctx = canvas.getContext('2d');
+                    // Disable anti-aliasing for sharp pixels
+                    ctx.imageSmoothingEnabled = false;
+
                     for (let py = 0; py < SECTOR_SIZE; py++) {
                         for (let px = 0; px < SECTOR_SIZE; px++) {
                             const pixel = sectorParser.getPixel(i, px, py);
@@ -92,7 +95,10 @@ function SectorLayer() {
                 const [x, y] = sectorId.split(':').map(Number);
                 const bounds = [[y * SECTOR_SIZE, x * SECTOR_SIZE], [(y + 1) * SECTOR_SIZE, (x + 1) * SECTOR_SIZE]];
                 const canvas = sector.frameCanvases[currentFrame];
-                L.imageOverlay(canvas.toDataURL(), bounds, { interactive: true }).addTo(layerRef);
+                L.imageOverlay(canvas.toDataURL(), bounds, {
+                    interactive: true,
+                    className: 'pixelated-canvas' // Add custom class
+                }).addTo(layerRef);
             }
         });
     }, [currentFrame, visibleSectors, sectors, layerRef]);
