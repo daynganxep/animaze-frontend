@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { settingActions } from "@/redux/slices/setting.slice";
-import { IconButton, Tooltip } from "@/mui/material";
-import { Brightness4, Brightness7 } from "@/mui/icons-material";
+import { IconButton, Tooltip } from "@mui/material";
+import { Brightness4, Brightness7 } from "@mui/icons-material";
 import { THEMES } from "@/configs/const.config";
 
 const ThemeToggleButton = () => {

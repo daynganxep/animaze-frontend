@@ -1,5 +1,5 @@
 import useMessageByApiCode from "@/hooks/use-message-by-api-code";
-import { Alert } from "@/mui/material";
+import { Alert } from "@mui/material";
 
 
 function ErrorMessage({ mutation }) {
