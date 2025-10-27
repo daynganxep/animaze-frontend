@@ -18,11 +18,11 @@ export default function CustomZoomControl() {
     return (
         <Stack spacing={1}>
             <IconButton
-                color="secondary"
+                color="primary"
                 size="small"
                 sx={{
                     border: '1px solid',
-                    borderColor: 'secondary.main',
+                    borderColor: 'primary.main',
                     backgroundColor: "white"
                 }}
                 onClick={handleZoomIn}
@@ -30,11 +30,11 @@ export default function CustomZoomControl() {
                 <AddIcon />
             </IconButton>
             <IconButton
-                color="secondary"
+                color="primary"
                 size="small"
                 sx={{
                     border: '1px solid',
-                    borderColor: 'secondary.main',
+                    borderColor: 'primary.main',
                     backgroundColor: "white"
                 }}
                 onClick={handleZoomOut}

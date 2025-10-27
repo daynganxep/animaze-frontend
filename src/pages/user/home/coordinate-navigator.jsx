@@ -45,12 +45,12 @@ export default function CoordinateNavigator() {
             dialog={dialog}
             triggerButton={
                 <IconButton
-                    color="secondary"
+                    color="primary"
                     size="large"
                     onClick={dialog.open}
                     sx={{
                         border: '1px solid',
-                        borderColor: 'secondary.main',
+                        borderColor: 'primary.main',
                     }}
                 >
                     <LocalAirport />

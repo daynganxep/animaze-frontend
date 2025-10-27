@@ -27,7 +27,7 @@ export class SectorDataParser {
     const pixelStartOffset = (frame * SECTOR_SIZE * SECTOR_SIZE + y * SECTOR_SIZE + x) * BYTES_PER_PIXEL;
     const colorIndex = this.dataView.getUint8(pixelStartOffset);
     const accountIndex = this.dataView.getUint16(pixelStartOffset + 1, true);
-    const color = (colorIndex === NULL_COLOR_INDEX) ? null : this.colorPalette[colorIndex];
+    const color = (colorIndex === NULL_COLOR_INDEX) ? null : this.colorPalette[colorIndex].color;
     const accountId = (accountIndex === NULL_ACCOUNT_INDEX) ? null : this.accountLegend[accountIndex];
     return { color, accountId };
   }

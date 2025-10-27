@@ -49,8 +49,8 @@ export default function ViewControl() {
                 value={frame}
                 exclusive
                 onChange={handleFrameChange}
-                size="medium"
-                color="secondary"
+                size="small"
+                color="primary"
                 orientation="vertical"
                 disabled={mode !== ANIMATION_MODE.STATIC}
             >
