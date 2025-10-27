@@ -4,41 +4,42 @@ import SectorLayer from './SectorLayer';
 import CoordinateNavigator from './CoordinateNavigator';
 import env from '@/configs/env.config';
 import PixelTracker from './PixelTracker';
+import { Stack } from '@mui/material';
+import Account from './account';
 
-const WORLD_DIMENSION = env.canvas_size; // 256,000
+const WORLD_DIMENSION = env.canvas_size;
 
-// Custom Coordinate Reference System for a flat, square world
 const CustomSimpleCRS = L.extend({}, L.CRS.Simple, {
-    // We need to adjust the transformation to map our world coordinates correctly.
-    // L.Transformation(a, b, c, d) means: x' = a*x + b, y' = c*y + d
-    // We want (lng, lat) -> (x, y) where y increases downwards.
-    // Leaflet's default Simple CRS flips the y-axis. We will use it as is.
     transformation: new L.Transformation(1, 0, 1, 0),
 });
 
 export default function PixelMap() {
     return (
-        <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
+        <Stack position="relative" width="100vw" height="100vh">
             <MapContainer
                 crs={CustomSimpleCRS}
-                center={[WORLD_DIMENSION / 2, WORLD_DIMENSION / 2]} // Center of our world
-                zoom={0} // Start zoomed out to see a larger portion
-                minZoom={0} // Allow zooming out further
+                center={[WORLD_DIMENSION / 2, WORLD_DIMENSION / 2]}
+                zoom={0}
+                minZoom={0}
                 maxZoom={9}
                 style={{ width: '100%', height: '100%', backgroundColor: '#f0f0f0' }}
                 maxBounds={[
-                    [0, 0], // Top-left corner
-                    [WORLD_DIMENSION, WORLD_DIMENSION], // Bottom-right corner
+                    [0, 0],
+                    [WORLD_DIMENSION, WORLD_DIMENSION],
                 ]}
-                maxBoundsViscosity={1.0} // Prevent dragging outside the world
-                zoomSnap={-0.5} // Controls the snapping of zoom levels (e.g., 0.5 allows half-step zooms)
-                zoomDelta={0.25} // Controls the zoom step when using zoom controls or keyboard
+                maxBoundsViscosity={1.0}
+                zoomSnap={-0.5}
+                zoomDelta={0.25}
             >
-                {/* <GridLayer /> */}
+                <Stack direction="column" position="absolute" top={0} right={0} padding={2} spacing={2} zIndex={1001} >
+                    <Account />
+                    <CoordinateNavigator />
+                </Stack>
+                <Stack direction="row" position="absolute" bottom={0} padding={2} zIndex={1001} width="100%" justifyContent="center">
+                    <PixelTracker />
+                </Stack>
                 <SectorLayer />
-                <CoordinateNavigator />
-                <PixelTracker />
             </MapContainer>
-        </div>
+        </Stack>
     );
 }

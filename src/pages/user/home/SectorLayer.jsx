@@ -1,26 +1,33 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { useMap, useMapEvents, LayerGroup } from 'react-leaflet';
+import { useMap, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import SectorService from '@/services/sector.service';
 import { SECTOR_SIZE, SectorDataParser, FRAMES_COUNT } from '@/tools/data.tool';
 import env from '@/configs/env.config';
+import { useSelector } from 'react-redux';
+import { ANIMATION_MODE } from '@/configs/const.config';
 
 const WORLD_DIMENSION = env.canvas_size;
 
 function SectorLayer() {
     const map = useMap();
-    const [sectors, setSectors] = useState(new Map()); // Cache for sector data and canvases
+    const [sectors, setSectors] = useState(new Map());
     const [visibleSectors, setVisibleSectors] = useState(new Set());
     const [currentFrame, setCurrentFrame] = useState(0);
-    const layerRef = useRef(L.layerGroup()).current; // Use a ref for the Leaflet layer
+    const { mode, staticFrame, animationSpeed } = useSelector(state => state.animation);
+    const layerRef = useRef(L.layerGroup()).current;
 
     // Animation loop for frames
     useEffect(() => {
         const frameInterval = setInterval(() => {
-            setCurrentFrame(prevFrame => (prevFrame + 1) % FRAMES_COUNT);
-        }, 1000); // 1 frame per second
+            if (mode === ANIMATION_MODE.ALL) {
+                setCurrentFrame(prevFrame => (prevFrame + 1) % FRAMES_COUNT);
+            } else {
+                setCurrentFrame(staticFrame);
+            }
+        }, animationSpeed);
         return () => clearInterval(frameInterval);
-    }, []);
+    }, [mode, animationSpeed]);
 
     // Function to calculate which sectors are visible
     const updateVisibleSectors = useCallback(() => {
@@ -97,7 +104,7 @@ function SectorLayer() {
                 const canvas = sector.frameCanvases[currentFrame];
                 L.imageOverlay(canvas.toDataURL(), bounds, {
                     interactive: true,
-                    className: 'pixelated-canvas' // Add custom class
+                    className: 'pixelated-canvas'
                 }).addTo(layerRef);
             }
         });

@@ -1,24 +1,19 @@
+import { ANIMATION_MODE } from "@/configs/const.config";
+import { getLS } from "@/tools/local-storage.tool";
+import { setStates } from "@/tools/store.tool";
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-    mode: 'ALL', // 'ALL', 'STATIC', 'REGION'
-    staticFrame: 0, // 0-3
-    animationSpeed: 500, // milliseconds per frame
-};
+const initialState = getLS("animation", {
+    mode: ANIMATION_MODE.ALL,
+    staticFrame: 0,
+    animationSpeed: 500,
+});
 
 const animationSlice = createSlice({
     name: "animation",
     initialState,
     reducers: {
-        setMode: (state, action) => {
-            state.mode = action.payload;
-        },
-        setStaticFrame: (state, action) => {
-            state.staticFrame = action.payload;
-        },
-        setAnimationSpeed: (state, action) => {
-            state.animationSpeed = action.payload;
-        },
+        setStates: setStates(initialState)
     },
 });
 

@@ -1,40 +1,94 @@
-import { useState } from 'react';
+import FormDialog from '@/components/dialog/form-dialog';
+import {
+    TextField,
+    Stack,
+    IconButton,
+} from '@mui/material';
+import { LocalAirport } from '@mui/icons-material';
 import { useMap } from 'react-leaflet';
+import { useTranslation } from 'react-i18next';
+import useDialog from '@/hooks/use-dialog';
+import { useMutation } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
+import { joiResolver } from '@hookform/resolvers/joi';
+import { coordsSchema } from '@/validations/coords-chema';
 
-function CoordinateNavigator() {
+export default function CoordinateNavigator() {
     const map = useMap();
-    const [coords, setCoords] = useState({ z: map.getZoom(), x: 0, y: 0 });
+    const { t } = useTranslation();
+    const dialog = useDialog();
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setCoords(prev => ({ ...prev, [name]: Number(value) }));
-    };
+    const form = useForm({
+        resolver: joiResolver(coordsSchema),
+        defaultValues: { z: 0, x: 0, y: 0 }
+    });
 
-    const handleMove = () => {
-        const { z, x, y } = coords;
-        // For our CRS, lat is y and lng is x
-        map.setView([y, x], z);
-    };
+    const {
+        register,
+        formState: { errors },
+    } = form;
+
+    const mutation = useMutation({
+        mutationFn: (data) => {
+            dialog.close();
+            const { z, x, y } = data;
+            map.setView([y, x], z);
+        },
+    });
 
     return (
-        <div style={{
-            position: 'absolute',
-            top: 10,
-            right: 10,
-            backgroundColor: 'rgba(255, 255, 255, 0.8)',
-            padding: '10px',
-            borderRadius: '5px',
-            zIndex: 1001, // Ensure it's above the map
-            display: 'flex',
-            gap: '10px',
-            alignItems: 'center'
-        }}>
-            <input type="number" name="z" value={coords.z} onChange={handleInputChange} placeholder="Zoom" style={{ width: '50px' }} />
-            <input type="number" name="x" value={coords.x} onChange={handleInputChange} placeholder="X" style={{ width: '80px' }} />
-            <input type="number" name="y" value={coords.y} onChange={handleInputChange} placeholder="Y" style={{ width: '80px' }} />
-            <button onClick={handleMove}>Move</button>
-        </div>
+        <FormDialog
+            submitButtonText="Move"
+            cancelButtonText="Cancel"
+            form={form}
+            mutation={mutation}
+            dialog={dialog}
+            triggerButton={
+                <IconButton
+                    color="secondary"
+                    size="large"
+                    onClick={dialog.open}
+                    sx={{
+                        border: '1px solid',
+                        borderColor: 'secondary.main',
+                    }}
+                >
+                    <LocalAirport />
+                </IconButton>
+            }
+        >
+            <Stack direction={"row"} spacing={2}>
+                <TextField
+                    fullWidth
+                    label={t("Zoom")}
+                    name="z"
+                    error={!!errors.z}
+                    helperText={errors?.z?.message}
+                    required
+                    type='number'
+                    {...register("z")}
+                />
+                <TextField
+                    fullWidth
+                    label={t("Pixel X")}
+                    name="x"
+                    error={!!errors.x}
+                    helperText={errors?.x?.message}
+                    required
+                    type='number'
+                    {...register("x")}
+                />
+                <TextField
+                    fullWidth
+                    label={t("Pixel Y")}
+                    name="y"
+                    error={!!errors.y}
+                    helperText={errors?.y?.message}
+                    required
+                    type='number'
+                    {...register("y")}
+                />
+            </Stack>
+        </ FormDialog >
     );
 }
-
-export default CoordinateNavigator;

@@ -12,3 +12,8 @@ export const ROLES = {
     USER: "USER",
     ADMIN: "ADMIN",
 };
+
+export const ANIMATION_MODE = {
+    ALL: "ALL",
+    STATIC: "STATIC"
+}

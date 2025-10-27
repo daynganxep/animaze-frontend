@@ -26,8 +26,16 @@ export default function GoogleLoginOauth2() {
         <GoogleOAuthProvider clientId={env.google_client_id}>
             <GoogleLogin
                 onSuccess={handleSuccess}
-                onError={() => console.log("Login Failed")}
+                onError={() => toast.error('Login Failed')}
                 useOneTap
+                theme="outline"
+                size="large"
+                shape="pill"
+                text="signin_with"
+                logo_alignment="left"
+                width="100%"
+                cancel_on_tap_outside
+                ux_mode='popup'
             />
         </GoogleOAuthProvider>
     );

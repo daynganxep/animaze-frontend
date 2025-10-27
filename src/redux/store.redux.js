@@ -3,7 +3,6 @@ import { setLS } from "@/tools/local-storage.tool";
 
 import { authReducer } from "./slices/auth.slice";
 import { settingReducer } from "./slices/setting.slice";
-
 import { animationReducer } from "./slices/animation.slice";
 
 const localStorageMiddleware = (store) => (next) => (action) => {
@@ -11,6 +10,8 @@ const localStorageMiddleware = (store) => (next) => (action) => {
     const state = store.getState();
     setLS("auth", state.auth);
     setLS("settings", state.setting);
+    setLS("animation", state.animation);
+
     return result;
 };
 

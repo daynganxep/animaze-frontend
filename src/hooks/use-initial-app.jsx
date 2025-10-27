@@ -28,6 +28,7 @@ const useInitialApp = () => {
       dispatch(authActions.setStates({ field: "account", value: null }));
       return;
     }
+    console.log(res)
     dispatch(authActions.setStates({ field: "account", value: res.data }));
   }, [dispatch]);
 

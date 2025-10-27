@@ -1,0 +1,54 @@
+.pixel-crosshair {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.corner {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border: 2px solid transparent;
+}
+
+.corner.tl {
+    top: 0;
+    left: 0;
+    border-top-color: white;
+    border-left-color: black;
+}
+
+.corner.tr {
+    top: 0;
+    right: 0;
+    border-top-color: white;
+    border-right-color: black;
+}
+
+.corner.bl {
+    bottom: 0;
+    left: 0;
+    border-bottom-color: white;
+    border-left-color: black;
+}
+
+.corner.br {
+    bottom: 0;
+    right: 0;
+    border-bottom-color: white;
+    border-right-color: black;
+}
+
+.center-dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    background: white;
+    border: 1px solid black;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
