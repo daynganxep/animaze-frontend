@@ -1,11 +1,12 @@
 import { MapContainer } from 'react-leaflet';
 import L from 'leaflet';
-import SectorLayer from './SectorLayer';
-import CoordinateNavigator from './CoordinateNavigator';
+import SectorLayer from './sector-layer';
+import CoordinateNavigator from './coordinate-navigator';
 import env from '@/configs/env.config';
-import PixelTracker from './PixelTracker';
+import PixelTracker from './pixel-tracker';
 import { Stack } from '@mui/material';
 import Account from './account';
+import CustomZoomControl from './zoom-control';
 
 const WORLD_DIMENSION = env.canvas_size;
 
@@ -30,7 +31,11 @@ export default function PixelMap() {
                 maxBoundsViscosity={1.0}
                 zoomSnap={-0.5}
                 zoomDelta={0.25}
+                zoomControl={false}
             >
+                <Stack direction="column" position="absolute" top={0} left={0} padding={2} spacing={2} zIndex={1001} >
+                    <CustomZoomControl></CustomZoomControl>
+                </Stack>
                 <Stack direction="column" position="absolute" top={0} right={0} padding={2} spacing={2} zIndex={1001} >
                     <Account />
                     <CoordinateNavigator />

@@ -1,11 +1,11 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useMap, useMapEvents } from 'react-leaflet';
-import L from 'leaflet';
 import SectorService from '@/services/sector.service';
 import { SECTOR_SIZE, SectorDataParser, FRAMES_COUNT } from '@/tools/data.tool';
-import env from '@/configs/env.config';
 import { useSelector } from 'react-redux';
 import { ANIMATION_MODE } from '@/configs/const.config';
+import L from 'leaflet';
+import env from '@/configs/env.config';
 
 const WORLD_DIMENSION = env.canvas_size;
 
@@ -60,6 +60,7 @@ function SectorLayer() {
         visibleSectors.forEach(async (sectorId) => {
             if (!sectors.has(sectorId)) {
                 const [x, y] = sectorId.split(':').map(Number);
+                console.log(x, y)
                 const [data, err] = await SectorService.get(x, y);
                 if (err) {
                     console.error(`Failed to load sector ${sectorId}:`, err);

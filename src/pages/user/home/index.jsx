@@ -1,4 +1,4 @@
-import PixelMap from "./PixelMap";
+import PixelMap from "./pixel-map";
 
 export default function Home() {
     return (
