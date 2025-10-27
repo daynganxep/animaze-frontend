@@ -1,53 +1,72 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useMap, useMapEvents } from 'react-leaflet';
+import { useSelector } from 'react-redux';
+import L from 'leaflet';
 import SectorService from '@/services/sector.service';
 import { SECTOR_SIZE, SectorDataParser, FRAMES_COUNT } from '@/tools/data.tool';
-import { useSelector } from 'react-redux';
 import { ANIMATION_MODE } from '@/configs/const.config';
-import L from 'leaflet';
 import env from '@/configs/env.config';
+import { useDispatch } from 'react-redux';
+import { animationActions } from '@/redux/slices/animation.slice';
 
 const WORLD_DIMENSION = env.canvas_size;
 
-function SectorLayer() {
+export default function SectorLayer() {
     const map = useMap();
+
+    // ================== States ==================
     const [sectors, setSectors] = useState(new Map());
     const [visibleSectors, setVisibleSectors] = useState(new Set());
-    const [currentFrame, setCurrentFrame] = useState(0);
-    const { mode, staticFrame, animationSpeed } = useSelector(state => state.animation);
+
+    const { mode, frame, speed } = useSelector((state) => state.animation);
+
+    const dispatch = useDispatch();
+
     const layerRef = useRef(L.layerGroup()).current;
 
-    // Animation loop for frames
+    // ================== Animation Loop ==================
     useEffect(() => {
         const frameInterval = setInterval(() => {
-            if (mode === ANIMATION_MODE.ALL) {
-                setCurrentFrame(prevFrame => (prevFrame + 1) % FRAMES_COUNT);
-            } else {
-                setCurrentFrame(staticFrame);
+            if (mode === ANIMATION_MODE.DYNAMIC) {
+                dispatch(animationActions.setStates({ field: "frame", value: (frame + 1) % FRAMES_COUNT }))
             }
-        }, animationSpeed);
-        return () => clearInterval(frameInterval);
-    }, [mode, animationSpeed]);
+        }, speed);
 
-    // Function to calculate which sectors are visible
+        return () => clearInterval(frameInterval);
+    }, [mode, speed, frame]);
+
+    // ================== Visible Sectors ==================
     const updateVisibleSectors = useCallback(() => {
         const bounds = map.getBounds();
-        const newVisibleSectors = new Set();
 
-        const startX = Math.max(0, Math.floor(bounds.getWest() / SECTOR_SIZE));
-        const endX = Math.min(Math.ceil(WORLD_DIMENSION / SECTOR_SIZE), Math.ceil(bounds.getEast() / SECTOR_SIZE));
-        const startY = Math.max(0, Math.floor(bounds.getNorth() / SECTOR_SIZE));
-        const endY = Math.min(Math.ceil(WORLD_DIMENSION / SECTOR_SIZE), Math.ceil(bounds.getSouth() / SECTOR_SIZE));
+        const west = Math.max(0, bounds.getWest());
+        const east = Math.min(WORLD_DIMENSION, bounds.getEast());
+        const north = Math.max(0, bounds.getNorth());
+        const south = Math.min(WORLD_DIMENSION, bounds.getSouth());
+
+        const newVisible = new Set();
+
+        const startX = Math.floor(west / SECTOR_SIZE);
+        const endX = Math.ceil(east / SECTOR_SIZE);
+        const startY = Math.floor(north / SECTOR_SIZE);
+        const endY = Math.ceil(south / SECTOR_SIZE);
 
         for (let y = startY; y < endY; y++) {
             for (let x = startX; x < endX; x++) {
-                newVisibleSectors.add(`${x}:${y}`);
+                if (
+                    x >= 0 &&
+                    y >= 0 &&
+                    x < WORLD_DIMENSION / SECTOR_SIZE &&
+                    y < WORLD_DIMENSION / SECTOR_SIZE
+                ) {
+                    newVisible.add(`${x}:${y}`);
+                }
             }
         }
-        setVisibleSectors(newVisibleSectors);
+
+        setVisibleSectors(newVisible);
     }, [map]);
 
-    // Listen to map events
     useMapEvents({
         moveend: updateVisibleSectors,
         zoomend: updateVisibleSectors,
@@ -55,63 +74,85 @@ function SectorLayer() {
         load: updateVisibleSectors,
     });
 
-    // Fetch data for new visible sectors
+    // ================== Fetch New Sectors ==================
     useEffect(() => {
         visibleSectors.forEach(async (sectorId) => {
             if (!sectors.has(sectorId)) {
                 const [x, y] = sectorId.split(':').map(Number);
-                console.log(x, y)
                 const [data, err] = await SectorService.get(x, y);
+
                 if (err) {
                     console.error(`Failed to load sector ${sectorId}:`, err);
                     return;
                 }
 
-                const sectorParser = new SectorDataParser(data.frames, data.accountLegend);
+                const parser = new SectorDataParser(data.frames, data.accountLegend);
                 const frameCanvases = [];
+
                 for (let i = 0; i < FRAMES_COUNT; i++) {
                     const canvas = document.createElement('canvas');
                     canvas.width = SECTOR_SIZE;
                     canvas.height = SECTOR_SIZE;
+
                     const ctx = canvas.getContext('2d');
-                    // Disable anti-aliasing for sharp pixels
+                    if (!ctx) continue;
                     ctx.imageSmoothingEnabled = false;
 
                     for (let py = 0; py < SECTOR_SIZE; py++) {
                         for (let px = 0; px < SECTOR_SIZE; px++) {
-                            const pixel = sectorParser.getPixel(i, px, py);
+                            const pixel = parser.getPixel(i, px, py);
                             if (pixel && pixel.color) {
                                 ctx.fillStyle = pixel.color;
                                 ctx.fillRect(px, py, 1, 1);
                             }
                         }
                     }
+
                     frameCanvases.push(canvas);
                 }
 
-                setSectors(prevSectors => new Map(prevSectors).set(sectorId, { ...data, frameCanvases }));
+                setSectors((prev) => {
+                    const next = new Map(prev);
+                    next.set(sectorId, { ...data, frameCanvases });
+                    return next;
+                });
             }
         });
     }, [visibleSectors, sectors]);
 
-    // Update the displayed frame on the canvas layer
+    // ================== Draw Sectors ==================
     useEffect(() => {
-        layerRef.clearLayers();
-        visibleSectors.forEach(sectorId => {
+        visibleSectors.forEach((sectorId) => {
             const sector = sectors.get(sectorId);
-            if (sector && sector.frameCanvases && sector.frameCanvases[currentFrame]) {
-                const [x, y] = sectorId.split(':').map(Number);
-                const bounds = [[y * SECTOR_SIZE, x * SECTOR_SIZE], [(y + 1) * SECTOR_SIZE, (x + 1) * SECTOR_SIZE]];
-                const canvas = sector.frameCanvases[currentFrame];
-                L.imageOverlay(canvas.toDataURL(), bounds, {
+            if (!sector || !sector.frameCanvases) return;
+
+            const canvas = sector.frameCanvases[frame];
+            if (!canvas) return;
+
+            const [x, y] = sectorId.split(':').map(Number);
+            const bounds = [
+                [y * SECTOR_SIZE, x * SECTOR_SIZE],
+                [(y + 1) * SECTOR_SIZE, (x + 1) * SECTOR_SIZE],
+            ];
+
+            const existing = layerRef
+                .getLayers()
+                .find((l) => l.options && l.options.sectorId === sectorId);
+
+            if (existing) {
+                existing.setUrl(canvas.toDataURL());
+            } else {
+                const overlay = L.imageOverlay(canvas.toDataURL(), bounds, {
                     interactive: true,
-                    className: 'pixelated-canvas'
-                }).addTo(layerRef);
+                    className: 'pixelated-canvas',
+                    sectorId,
+                });
+                overlay.addTo(layerRef);
             }
         });
-    }, [currentFrame, visibleSectors, sectors, layerRef]);
+    }, [frame, visibleSectors, sectors, layerRef]);
 
-    // Add the layer group to the map
+    // ================== Layer Lifecycle ==================
     useEffect(() => {
         layerRef.addTo(map);
         return () => {
@@ -119,7 +160,5 @@ function SectorLayer() {
         };
     }, [map, layerRef]);
 
-    return null; // This component manages layers directly, no need to render anything here
+    return null;
 }
-
-export default SectorLayer;

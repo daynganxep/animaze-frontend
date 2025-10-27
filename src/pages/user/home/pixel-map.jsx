@@ -7,6 +7,7 @@ import PixelTracker from './pixel-tracker';
 import { Stack } from '@mui/material';
 import Account from './account';
 import CustomZoomControl from './zoom-control';
+import ViewControl from './view-control';
 
 const WORLD_DIMENSION = env.canvas_size;
 
@@ -39,6 +40,7 @@ export default function PixelMap() {
                 <Stack direction="column" position="absolute" top={0} right={0} padding={2} spacing={2} zIndex={1001} >
                     <Account />
                     <CoordinateNavigator />
+                    <ViewControl></ViewControl>
                 </Stack>
                 <Stack direction="row" position="absolute" bottom={0} padding={2} zIndex={1001} width="100%" justifyContent="center">
                     <PixelTracker />

@@ -10,8 +10,6 @@ const localStorageMiddleware = (store) => (next) => (action) => {
     const state = store.getState();
     setLS("auth", state.auth);
     setLS("settings", state.setting);
-    setLS("animation", state.animation);
-
     return result;
 };
 

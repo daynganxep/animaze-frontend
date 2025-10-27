@@ -14,6 +14,6 @@ export const ROLES = {
 };
 
 export const ANIMATION_MODE = {
-    ALL: "ALL",
+    DYNAMIC: "DYNAMIC",
     STATIC: "STATIC"
 }
