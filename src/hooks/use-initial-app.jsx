@@ -13,12 +13,12 @@ const useInitialApp = () => {
     const [res, error] = await AuthService.refreshToken();
     if (error) {
       dispatch(authActions.setStates({ field: "tokens", reset: true }));
-      dispatch(authActions.setStates({ field: "isLoging", value: false }));
+      dispatch(authActions.setStates({ field: "logged", value: false }));
       return false;
     }
     const { accessToken } = res.data;
     dispatch(authActions.setStates({ field: "tokens.accessToken", value: accessToken }));
-    dispatch(authActions.setStates({ field: "isLoging", value: true }));
+    dispatch(authActions.setStates({ field: "logged", value: true }));
     return true;
   }, [dispatch]);
 
@@ -36,7 +36,7 @@ const useInitialApp = () => {
 
     const init = async () => {
       if (!refreshToken) {
-        dispatch(authActions.setStates({ field: "isLoging", value: false }));
+        dispatch(authActions.setStates({ field: "logged", value: false }));
         return;
       }
 

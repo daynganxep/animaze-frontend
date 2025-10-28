@@ -7,17 +7,17 @@ import { useSelector } from 'react-redux';
 
 
 export default function Account() {
-    const { isLoging, account } = useSelector(s => s.auth);
+    const { logged, account } = useSelector(s => s.auth);
     const dialog = useDialog();
 
     return (
         <GeneralDialog
             dialog={dialog}
             triggerButton={
-                isLoging ?
+                logged ?
                     <Avatar
-                        src={account.avatar}
-                        srcSet={account.avatar}
+                        src={account?.avatar}
+                        srcSet={account?.avatar}
                         variant="circular"
                         sx={{
                             width: 48,

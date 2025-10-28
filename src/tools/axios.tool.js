@@ -8,8 +8,8 @@ const axiosInstance = axios.create({ baseURL: API_URL });
 axiosInstance.interceptors.request.use(
     (config) => {
         const { accessToken } = store.getState().auth.tokens;
-        const isLoging = store.getState().auth.isLoging || false;
-        if (isLoging && accessToken) {
+        const logged = store.getState().auth.logged || false;
+        if (logged && accessToken) {
             config.headers.Authorization = `Bearer ${accessToken}`;
         }
         return config;

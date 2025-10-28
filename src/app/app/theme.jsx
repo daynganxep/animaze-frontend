@@ -1,7 +1,7 @@
 import { createTheme, alpha } from '@mui/material/styles';
 
-const black = '#000000';
-const white = '#ffffff';
+const black = 'rgba(0, 0, 0, 1)';
+const white = '#ffffffff';
 
 const theme = createTheme({
   palette: {
@@ -25,7 +25,7 @@ const theme = createTheme({
   },
 
   shape: {
-    borderRadius: 20,
+    borderRadius: 4,
   },
 
   components: {
@@ -49,11 +49,11 @@ const theme = createTheme({
     MuiIconButton: {
       styleOverrides: {
         root: {
-          backgroundColor: alpha(black, 0.5),
+          backgroundColor: alpha(black, 0.75),
           backdropFilter: 'blur(6px)',
           color: white,
           '&:hover': {
-            backgroundColor: alpha(black, 0.8),
+            backgroundColor: alpha(black, 1),
           },
         },
       },
@@ -62,8 +62,8 @@ const theme = createTheme({
     MuiDialog: {
       styleOverrides: {
         paper: {
-          borderRadius: 24,
-          backgroundColor: alpha(black, 0.75),
+          borderRadius: 0,
+          backgroundColor: alpha(black, 0.5),
           backdropFilter: 'blur(10px)',
           boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
         },
