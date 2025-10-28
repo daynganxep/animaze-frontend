@@ -15,7 +15,6 @@ export default function ViewControl() {
     };
 
     const handleFrameChange = (_, newFrame) => {
-        console.log(newFrame)
         if (newFrame !== null) {
             dispatch(animationActions.setStates({ field: 'frame', value: newFrame }));
         }

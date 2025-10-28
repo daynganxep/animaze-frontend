@@ -9,35 +9,23 @@ import { useDispatch } from 'react-redux';
 import { animationActions } from '@/redux/slices/animation.slice';
 import { FRAMES_COUNT, SECTOR_SIZE, WORLD_DIMENSION } from '@/configs/env.config';
 
-
 export default function SectorLayer() {
     const map = useMap();
-
-    // ================== States ==================
     const [sectors, setSectors] = useState(new Map());
     const [visibleSectors, setVisibleSectors] = useState(new Set());
-
     const { mode, frame, speed } = useSelector((state) => state.animation);
-
     const dispatch = useDispatch();
-
     const layerRef = useRef(L.layerGroup()).current;
 
-
-    console.log(visibleSectors)
-
-    // ================== Animation Loop ==================
     useEffect(() => {
         const frameInterval = setInterval(() => {
             if (mode === ANIMATION_MODE.DYNAMIC) {
-                dispatch(animationActions.setStates({ field: "frame", value: (frame + 1) % FRAMES_COUNT }))
+                dispatch(animationActions.setStates({ field: "frame", value: (frame + 1) % FRAMES_COUNT }));
             }
         }, speed);
-
         return () => clearInterval(frameInterval);
-    }, [mode, speed, frame]);
+    }, [mode, speed, frame, dispatch]);
 
-    // ================== Visible Sectors ==================
     const updateVisibleSectors = useCallback(() => {
         const bounds = map.getBounds();
         const west = Math.max(0, bounds.getWest());
@@ -68,19 +56,20 @@ export default function SectorLayer() {
         load: updateVisibleSectors,
     });
 
-    // ================== Fetch New Sectors ==================
     useEffect(() => {
         const fetchNewSectors = async () => {
-            const newSectorIds = Array.from(visibleSectors).filter(sectorId => !sectors.has(sectorId));
-            if (newSectorIds.length === 0) return;
-
-            const fetchPromises = newSectorIds.map(async (sectorId) => {
+            const fetchPromises = Array.from(visibleSectors).map(async (sectorId) => {
+                const cached = sectors.get(sectorId);
                 const [x, y] = sectorId.split(':').map(Number);
-                const [data, err] = await SectorService.get(x, y);
+                const [data, err] = await SectorService.get(x, y, cached?.etag);
+
                 if (err) {
-                    console.error(`Failed to load sector ${sectorId}:`, err);
+                    console.log(`Not found ${sectorId}`);
+                    if (cached) return { sectorId, data: cached };
                     return null;
                 }
+
+                if (!data) return { sectorId, data: cached };
 
                 const parser = new SectorDataParser(data.frames, data.accountLegend);
                 const frameCanvases = [];
@@ -119,9 +108,9 @@ export default function SectorLayer() {
         };
 
         fetchNewSectors();
-    }, [visibleSectors, sectors]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [visibleSectors]);
 
-    // ================== Draw Sectors ==================
     useEffect(() => {
         visibleSectors.forEach((sectorId) => {
             const sector = sectors.get(sectorId);
@@ -136,9 +125,7 @@ export default function SectorLayer() {
                 [(y + 1) * SECTOR_SIZE, (x + 1) * SECTOR_SIZE],
             ];
 
-            const existing = layerRef
-                .getLayers()
-                .find((l) => l.options && l.options.sectorId === sectorId);
+            const existing = layerRef.getLayers().find((l) => l.options && l.options.sectorId === sectorId);
 
             if (existing) {
                 existing.setUrl(canvas.toDataURL());
@@ -153,13 +140,11 @@ export default function SectorLayer() {
         });
     }, [frame, visibleSectors, sectors, layerRef]);
 
-    // ================== Layer Lifecycle ==================
     useEffect(() => {
         layerRef.addTo(map);
-        return () => {
-            map.removeLayer(layerRef);
-        };
+        return () => map.removeLayer(layerRef);
     }, [map, layerRef]);
 
     return null;
 }
+
