@@ -13,7 +13,7 @@ const router = createBrowserRouter([
             {
                 element: <AdminMainLayout />,
                 children: [
-                    { path: '/admin', element: <WrapPage title="Admin Dashboard" Component={Home} /> },
+                    { path: '/@admin', element: <WrapPage title="Admin Dashboard" Component={Home} /> },
                 ],
             },
         ],

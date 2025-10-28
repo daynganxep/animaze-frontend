@@ -1,8 +1,8 @@
-import { DatePicker } from "@/mui/x-date-pickers/DatePicker";
-import { LocalizationProvider } from "@/mui/x-date-pickers/LocalizationProvider";
-import { AdapterDateFns } from "@/mui/x-date-pickers/AdapterDateFns";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { formatDateForInput } from "@tools/date.tool";
 import vi from "date-fns/locale/vi";
-import { formatDateForInput } from "@/tools/date.tool";
 
 const DateField = ({
     value,

@@ -3,9 +3,9 @@ import { Navigate } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 
 function PrivateRoute() {
-    const isLoging = useSelector((state) => state.auth.isLoging);
+    const logged = useSelector((state) => state.auth.logged);
 
-    if (isLoging) {
+    if (logged) {
         return <Outlet />;
     }
 

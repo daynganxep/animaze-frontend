@@ -1,15 +1,15 @@
 import axios from "axios";
 import store from "@/redux/store.redux";
-import env from "@/configs/env.config";
 
 import _ from "lodash";
+import { API_URL } from "@/configs/env.config";
 
-const axiosInstance = axios.create({ baseURL: env.api_url });
+const axiosInstance = axios.create({ baseURL: API_URL });
 axiosInstance.interceptors.request.use(
     (config) => {
         const { accessToken } = store.getState().auth.tokens;
-        const isLoging = store.getState().auth.isLoging || false;
-        if (isLoging && accessToken) {
+        const logged = store.getState().auth.logged || false;
+        if (logged && accessToken) {
             config.headers.Authorization = `Bearer ${accessToken}`;
         }
         return config;
@@ -19,9 +19,10 @@ axiosInstance.interceptors.request.use(
     },
 );
 
-export async function service(axiosPromise, getData = false) {
+export async function service(axiosPromise, getData = false, raw = false) {
     try {
         const response = await axiosPromise;
+        if (raw) return [response, null];
         const result = getData
             ? _.get(response, "data.data")
             : { ...response.data, status: response.status };

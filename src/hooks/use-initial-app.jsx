@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "@/redux/slices/auth.slice";
 import AuthService from "@/services/auth.service";
 import AccountService from "@/services/account.service";
-import env from "@/configs/env.config";
+import { INTERVAL_REFRESH_TOKEN } from "@/configs/env.config";
 
 const useInitialApp = () => {
   const dispatch = useDispatch();
@@ -13,12 +13,12 @@ const useInitialApp = () => {
     const [res, error] = await AuthService.refreshToken();
     if (error) {
       dispatch(authActions.setStates({ field: "tokens", reset: true }));
-      dispatch(authActions.setStates({ field: "isLoging", value: false }));
+      dispatch(authActions.setStates({ field: "logged", value: false }));
       return false;
     }
     const { accessToken } = res.data;
     dispatch(authActions.setStates({ field: "tokens.accessToken", value: accessToken }));
-    dispatch(authActions.setStates({ field: "isLoging", value: true }));
+    dispatch(authActions.setStates({ field: "logged", value: true }));
     return true;
   }, [dispatch]);
 
@@ -36,12 +36,12 @@ const useInitialApp = () => {
 
     const init = async () => {
       if (!refreshToken) {
-        dispatch(authActions.setStates({ field: "isLoging", value: false }));
+        dispatch(authActions.setStates({ field: "logged", value: false }));
         return;
       }
 
       await handleRefreshToken();
-      intervalId = setInterval(handleRefreshToken, env.interval_refresh_token);
+      intervalId = setInterval(handleRefreshToken, INTERVAL_REFRESH_TOKEN);
     };
 
     init();

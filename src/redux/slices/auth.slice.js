@@ -6,7 +6,7 @@ import { setStates } from "@/tools/store.tool";
 const initialState = getLS("auth", {
     tokens: { accessToken: "", refreshToken: "" },
     account: null,
-    isLoging: false,
+    logged: false,
     redirect: "/",
 })
 
