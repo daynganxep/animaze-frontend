@@ -1,10 +1,10 @@
 import axios from "axios";
 import store from "@/redux/store.redux";
-import env from "@/configs/env.config";
 
 import _ from "lodash";
+import { API_URL } from "@/configs/env.config";
 
-const axiosInstance = axios.create({ baseURL: env.api_url });
+const axiosInstance = axios.create({ baseURL: API_URL });
 axiosInstance.interceptors.request.use(
     (config) => {
         const { accessToken } = store.getState().auth.tokens;

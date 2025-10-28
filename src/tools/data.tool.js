@@ -1,9 +1,6 @@
+import { FRAMES_COUNT, SECTOR_SIZE } from "@/configs/env.config";
 import { COLOR_PALETTE } from "@/configs/palette.config";
 
-import env from "@/configs/env.config";
-
-export const SECTOR_SIZE = env.sector_size;
-export const FRAMES_COUNT = env.frames_count;
 export const BYTES_PER_PIXEL = 3;
 
 export const NULL_COLOR_INDEX = 255;

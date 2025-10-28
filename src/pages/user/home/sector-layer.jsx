@@ -5,11 +5,9 @@ import L from 'leaflet';
 import SectorService from '@/services/sector.service';
 import { SECTOR_SIZE, SectorDataParser, FRAMES_COUNT } from '@/tools/data.tool';
 import { ANIMATION_MODE } from '@/configs/const.config';
-import env from '@/configs/env.config';
 import { useDispatch } from 'react-redux';
 import { animationActions } from '@/redux/slices/animation.slice';
-
-const WORLD_DIMENSION = env.canvas_size;
+import { WORLD_DIMENSION } from '@/configs/env.config';
 
 export default function SectorLayer() {
     const map = useMap();

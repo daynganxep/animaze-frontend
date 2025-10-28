@@ -1,7 +1,7 @@
-import env from "@/configs/env.config"
+import { API_URL } from "@/configs/env.config";
 
 const getApiUrl = (path) => {
-    return `${env.api_url}${path}`;
+    return `${API_URL}${path}`;
 };
 
 export { getApiUrl };

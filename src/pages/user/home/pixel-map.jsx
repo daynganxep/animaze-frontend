@@ -2,14 +2,12 @@ import { MapContainer } from 'react-leaflet';
 import L from 'leaflet';
 import SectorLayer from './sector-layer';
 import CoordinateNavigator from './coordinate-navigator';
-import env from '@/configs/env.config';
 import PixelTracker from './pixel-tracker';
 import { Stack } from '@mui/material';
 import Account from './account';
 import CustomZoomControl from './zoom-control';
 import ViewControl from './view-control';
-
-const WORLD_DIMENSION = env.canvas_size;
+import { WORLD_DIMENSION } from '@/configs/env.config';
 
 const CustomSimpleCRS = L.extend({}, L.CRS.Simple, {
     transformation: new L.Transformation(1, 0, 1, 0),

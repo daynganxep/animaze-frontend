@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "@/redux/slices/auth.slice";
 import AuthService from "@/services/auth.service";
 import AccountService from "@/services/account.service";
-import env from "@/configs/env.config";
+import { INTERVAL_REFRESH_TOKEN } from "@/configs/env.config";
 
 const useInitialApp = () => {
   const dispatch = useDispatch();
@@ -41,7 +41,7 @@ const useInitialApp = () => {
       }
 
       await handleRefreshToken();
-      intervalId = setInterval(handleRefreshToken, env.interval_refresh_token);
+      intervalId = setInterval(handleRefreshToken, INTERVAL_REFRESH_TOKEN);
     };
 
     init();

@@ -1,8 +1,6 @@
 import L from 'leaflet';
 import { SECTOR_SIZE } from '@/tools/data.tool';
-import env from '@/configs/env.config';
-
-const WORLD_DIMENSION = env.canvas_size;
+import { WORLD_DIMENSION } from '@/configs/env.config';
 
 export function screenToWorld(screenPoint, mapInstance) {
     const [screenX, screenY] = screenPoint;
