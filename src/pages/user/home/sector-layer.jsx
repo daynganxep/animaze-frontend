@@ -23,6 +23,9 @@ export default function SectorLayer() {
 
     const layerRef = useRef(L.layerGroup()).current;
 
+
+    console.log(visibleSectors)
+
     // ================== Animation Loop ==================
     useEffect(() => {
         const frameInterval = setInterval(() => {
@@ -37,32 +40,24 @@ export default function SectorLayer() {
     // ================== Visible Sectors ==================
     const updateVisibleSectors = useCallback(() => {
         const bounds = map.getBounds();
-
         const west = Math.max(0, bounds.getWest());
         const east = Math.min(WORLD_DIMENSION, bounds.getEast());
-        const north = Math.max(0, bounds.getNorth());
-        const south = Math.min(WORLD_DIMENSION, bounds.getSouth());
+        const south = Math.max(0, bounds.getSouth());
+        const north = Math.min(WORLD_DIMENSION, bounds.getNorth());
 
         const newVisible = new Set();
-
         const startX = Math.floor(west / SECTOR_SIZE);
         const endX = Math.ceil(east / SECTOR_SIZE);
-        const startY = Math.floor(north / SECTOR_SIZE);
-        const endY = Math.ceil(south / SECTOR_SIZE);
+        const startY = Math.floor(south / SECTOR_SIZE);
+        const endY = Math.ceil(north / SECTOR_SIZE);
 
         for (let y = startY; y < endY; y++) {
             for (let x = startX; x < endX; x++) {
-                if (
-                    x >= 0 &&
-                    y >= 0 &&
-                    x < WORLD_DIMENSION / SECTOR_SIZE &&
-                    y < WORLD_DIMENSION / SECTOR_SIZE
-                ) {
+                if (x >= 0 && y >= 0 && x < WORLD_DIMENSION / SECTOR_SIZE && y < WORLD_DIMENSION / SECTOR_SIZE) {
                     newVisible.add(`${x}:${y}`);
                 }
             }
         }
-
         setVisibleSectors(newVisible);
     }, [map]);
 
@@ -75,14 +70,16 @@ export default function SectorLayer() {
 
     // ================== Fetch New Sectors ==================
     useEffect(() => {
-        visibleSectors.forEach(async (sectorId) => {
-            if (!sectors.has(sectorId)) {
+        const fetchNewSectors = async () => {
+            const newSectorIds = Array.from(visibleSectors).filter(sectorId => !sectors.has(sectorId));
+            if (newSectorIds.length === 0) return;
+
+            const fetchPromises = newSectorIds.map(async (sectorId) => {
                 const [x, y] = sectorId.split(':').map(Number);
                 const [data, err] = await SectorService.get(x, y);
-
                 if (err) {
                     console.error(`Failed to load sector ${sectorId}:`, err);
-                    return;
+                    return null;
                 }
 
                 const parser = new SectorDataParser(data.frames, data.accountLegend);
@@ -92,7 +89,6 @@ export default function SectorLayer() {
                     const canvas = document.createElement('canvas');
                     canvas.width = SECTOR_SIZE;
                     canvas.height = SECTOR_SIZE;
-
                     const ctx = canvas.getContext('2d');
                     if (!ctx) continue;
                     ctx.imageSmoothingEnabled = false;
@@ -106,17 +102,23 @@ export default function SectorLayer() {
                             }
                         }
                     }
-
                     frameCanvases.push(canvas);
                 }
 
-                setSectors((prev) => {
-                    const next = new Map(prev);
-                    next.set(sectorId, { ...data, frameCanvases });
-                    return next;
+                return { sectorId, data: { ...data, frameCanvases } };
+            });
+
+            const results = await Promise.all(fetchPromises);
+            setSectors((prev) => {
+                const next = new Map(prev);
+                results.forEach((result) => {
+                    if (result) next.set(result.sectorId, result.data);
                 });
-            }
-        });
+                return next;
+            });
+        };
+
+        fetchNewSectors();
     }, [visibleSectors, sectors]);
 
     // ================== Draw Sectors ==================
