@@ -32,14 +32,8 @@ export default function Account() {
                     />
                     :
                     <IconButton
-                        color="secondary"
                         size="large"
                         onClick={dialog.open}
-                        sx={{
-                            border: '1px solid',
-                            borderColor: 'secondary.main',
-                            backgroundColor: "white"
-                        }}
                     >
                         <Login />
                     </IconButton>

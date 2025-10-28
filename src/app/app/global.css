@@ -65,7 +65,6 @@ body {
 
 /* Modern high contrast support - replaces deprecated -ms-high-contrast */
 @media (forced-colors: active) {
-
     /* Ensure proper contrast in high contrast mode */
     * {
         forced-color-adjust: auto;

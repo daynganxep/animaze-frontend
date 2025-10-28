@@ -44,15 +44,7 @@ export default function CoordinateNavigator() {
             mutation={mutation}
             dialog={dialog}
             triggerButton={
-                <IconButton
-                    color="primary"
-                    size="large"
-                    onClick={dialog.open}
-                    sx={{
-                        border: '1px solid',
-                        borderColor: 'primary.main',
-                    }}
-                >
+                <IconButton size='large' color="primary" onClick={dialog.open}>
                     <LocalAirport />
                 </IconButton>
             }

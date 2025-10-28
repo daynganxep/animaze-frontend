@@ -1,4 +1,4 @@
-import { Stack, IconButton, ToggleButtonGroup, ToggleButton, Tooltip } from '@mui/material';
+import { Stack, IconButton, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { ANIMATION_MODE } from '@/configs/const.config';
 import { animationActions } from '@/redux/slices/animation.slice';
@@ -26,33 +26,21 @@ export default function ViewControl() {
             direction="column"
             spacing={2}
         >
-            <IconButton
-                color={mode === ANIMATION_MODE.STATIC ? 'secondary' : 'primary'}
-                onClick={toggleMode}
-                sx={{
-                    border: '1px solid',
-                    borderColor: mode === ANIMATION_MODE.STATIC ? 'secondary.main' : 'primary.main',
-                    width: 48,
-                    height: 48,
-                }}
-            >
+            <IconButton size='large' onClick={toggleMode}>
                 {mode === ANIMATION_MODE.STATIC ? (
                     <PlayArrow />
                 ) : (
                     <Pause />
                 )}
             </IconButton>
-            {/* </Tooltip> */}
 
-            {/* 🎞 Frame buttons */}
             <ToggleButtonGroup
                 value={frame}
                 exclusive
                 onChange={handleFrameChange}
                 size="small"
-                color="primary"
                 orientation="vertical"
-                disabled={mode !== ANIMATION_MODE.STATIC}
+                disabled={mode === ANIMATION_MODE.DYNAMIC}
             >
                 {[0, 1, 2, 3].map(f => (
                     <ToggleButton key={f} value={f}>

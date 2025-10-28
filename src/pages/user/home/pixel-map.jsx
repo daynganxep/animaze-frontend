@@ -3,7 +3,7 @@ import L from 'leaflet';
 import SectorLayer from './sector-layer';
 import CoordinateNavigator from './coordinate-navigator';
 import PixelTracker from './pixel-tracker';
-import { Stack } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 import Account from './account';
 import CustomZoomControl from './zoom-control';
 import ViewControl from './view-control';
