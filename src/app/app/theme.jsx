@@ -1,7 +1,7 @@
 import { createTheme, alpha } from '@mui/material/styles';
 
 const black = 'rgba(0, 0, 0, 1)';
-const white = '#ffffffff';
+const white = 'rgba(255, 255, 255, 1)';
 
 const theme = createTheme({
   palette: {
@@ -14,6 +14,7 @@ const theme = createTheme({
       main: alpha(white, 0.8),
     },
     background: {
+      black: black,
       default: alpha(black, 0.6),
       paper: alpha(black, 0.75),
     },
@@ -32,6 +33,7 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
+          borderRadius: 4,
           textTransform: 'none',
           fontWeight: 500,
           color: white,
@@ -62,10 +64,9 @@ const theme = createTheme({
     MuiDialog: {
       styleOverrides: {
         paper: {
-          borderRadius: 0,
+          borderRadius: 4,
           backgroundColor: alpha(black, 0.5),
-          backdropFilter: 'blur(10px)',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+          backdropFilter: 'blur(5px)',
         },
       },
     },
@@ -105,22 +106,23 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 50,
-          color: white,
-          backgroundColor: alpha(black, 0.5),
-          transition: 'all 0.2s ease',
+          color: alpha(white, 1),
+          backgroundColor: alpha(black, 0.1),
+          transition: 'all 0.25s',
           '&:hover': {
-            backgroundColor: alpha(black, 0.8),
+            backgroundColor: alpha(black, 0.5),
           },
           '&.Mui-selected': {
             backgroundColor: alpha(black, 1),
-            color: white,
             '&:hover': {
-              backgroundColor: alpha(black, 0.8),
+              backgroundColor: alpha(black, 1),
             },
           },
+          '&.Mui-disabled': {
+            backgroundColor: alpha(black, 0.1),
+          },
           '&.Mui-selected.Mui-disabled': {
-            color: alpha(white, 0.4),
-            backgroundColor: alpha(black, 0.2),
+            backgroundColor: alpha(black, 1),
           },
         },
       },

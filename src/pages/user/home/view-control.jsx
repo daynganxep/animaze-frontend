@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ANIMATION_MODE } from '@/configs/const.config';
 import { animationActions } from '@/redux/slices/animation.slice';
 import { PlayArrow, Pause } from '@mui/icons-material';
+import { FRAMES_COUNT } from '@/configs/env.config';
 
 export default function ViewControl() {
     const dispatch = useDispatch();
@@ -41,7 +42,7 @@ export default function ViewControl() {
                 orientation="vertical"
                 disabled={mode === ANIMATION_MODE.DYNAMIC}
             >
-                {[0, 1, 2, 3].map(f => (
+                {Array.from({ length: FRAMES_COUNT }, (_, i) => i).map(f => (
                     <ToggleButton key={f} value={f}>
                         {f}
                     </ToggleButton>
