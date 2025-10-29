@@ -7,9 +7,11 @@ import Window from '@/components/ui/window';
 import useTippy from '@/hooks/use-tippy';
 import { authActions } from '@/redux/slices/auth.slice';
 import { Copy, LogOut } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function AccountButton({ account }) {
-    const dispatch = useDispatch()
+    const { t } = useTranslation();
+    const dispatch = useDispatch();
     const tippy = useTippy();
 
     const avatarRef = useRef(null);
@@ -70,16 +72,16 @@ export default function AccountButton({ account }) {
 
                         <Stack direction="row" alignItems="center" spacing={1}>
                             <Typography variant="subtitle1" color="text.secondary" noWrap>
-                                ID: {account?.publicId}
+                                {t("ui.id")}: {account?.publicId}
                             </Typography>
 
-                            <Tooltip title={copied ? "Copied!" : "Copy ID"}>
+                            <Tooltip arrow placement="right" title={copied ? t("ui.copied-id") : t("ui.copy-id")}>
                                 <Copy onClick={handleCopy} fontSize="small" />
                             </Tooltip>
                         </Stack>
 
                         <Typography variant="subtitle1" color="text.secondary">
-                            Provider: {account?.provider}
+                            {t("ui.provider")}: {account?.provider}
                         </Typography>
                     </Stack>
                 </Stack>
@@ -88,7 +90,7 @@ export default function AccountButton({ account }) {
                     size="medium"
                     sx={{ width: "100%", borderRadius: 10 }}
                     endIcon={<LogOut></LogOut>}>
-                    Log out
+                    {t("ui.log-out")}
                 </Button>
             </Window>
         )}>

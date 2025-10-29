@@ -1,10 +1,12 @@
-import { Box, IconButton } from "@mui/material";
+import { Box, IconButton, Tooltip } from "@mui/material";
 import L from 'leaflet';
 import { X } from "lucide-react";
 import { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 
 function Window({ close, children, sx = {} }) {
+    const { t } = useTranslation();
     const ref = useRef(null);
 
     useEffect(() => {
@@ -19,9 +21,11 @@ function Window({ close, children, sx = {} }) {
         minHeight: 100,
         ...sx
     }}>
-        <IconButton size="small" onClick={close} sx={{ position: "absolute", top: 12, right: 12 }}>
-            <X></X>
-        </IconButton>
+        <Tooltip arrow placement="left" title={t("common.close")}>
+            <IconButton size="small" onClick={close} sx={{ position: "absolute", top: 12, right: 12 }}>
+                <X></X>
+            </IconButton>
+        </Tooltip>
         {children}
     </Box>);
 }

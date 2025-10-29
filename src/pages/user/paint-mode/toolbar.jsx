@@ -6,19 +6,24 @@ import { PAINT_TYPE } from "@/configs/const.config";
 import { useMutation } from "@tanstack/react-query";
 import SectorService from "@/services/sector.service";
 import toast from "@/hooks/toast";
+import { useDispatch } from "react-redux";
+import { uiActions } from "@/redux/slices/ui.slice";
 
 export default memo(function Toolbar({ paintingPixels, paintType, togglePaintType, bone, toggleBone, }) {
     const isEraserActive = paintType === PAINT_TYPE.ERASER;
     const isBoneActive = bone;
     const canPaintToServer = paintingPixels?.size > 0;
+    const dispatch = useDispatch();
 
     const { mutate, isPending } = useMutation({
         mutationFn: SectorService.paint,
-        onError: () => {
-            toast.success("PAINT FALSE");
-        },
-        onSuccess: () => {
-            toast.success("PAINT SUCCESS");
+        onSuccess: ([res, err]) => {
+            if (err) {
+                toast.error(err.messageCode);
+            } else {
+                toast.success(res.messageCode);
+                dispatch(uiActions.setStates({ field: "paintMode", value: false }))
+            }
         },
     });
 
@@ -39,7 +44,7 @@ export default memo(function Toolbar({ paintingPixels, paintType, togglePaintTyp
     return (
         <Stack direction="row" justifyContent="space-between" alignItems="end" p={1} >
             <Stack direction="row" spacing={2}>
-                <Tooltip title="Eraser">
+                <Tooltip arrow placement="top" title="Eraser">
                     <IconButton
                         sx={sx(isEraserActive)}
                         onClick={togglePaintType}
@@ -47,7 +52,7 @@ export default memo(function Toolbar({ paintingPixels, paintType, togglePaintTyp
                         <Eraser />
                     </IconButton>
                 </Tooltip>
-                <Tooltip title="Bone pixel">
+                <Tooltip arrow placement="top" title="Bone pixel">
                     <IconButton
                         sx={sx(isBoneActive)}
                         onClick={toggleBone}

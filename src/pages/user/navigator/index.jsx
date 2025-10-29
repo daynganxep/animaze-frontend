@@ -3,6 +3,7 @@ import {
     TextField,
     Stack,
     IconButton,
+    Tooltip,
 } from '@mui/material';
 import { Plane } from 'lucide-react';
 import { useMap } from 'react-leaflet';
@@ -49,21 +50,23 @@ export default function Navigator() {
 
     return (
         <FormDialog
-            submitButtonText="Move"
-            cancelButtonText="Cancel"
+            submitButtonText="ui.fly"
+            cancelButtonText="common.close"
             form={form}
             mutation={mutation}
             dialog={dialog}
             triggerButton={
-                <IconButton ref={moveRef} size='large' color="primary" onClick={dialog.open}>
-                    <Plane />
-                </IconButton>
+                <Tooltip arrow placement="left" title={t("ui.fly")}>
+                    <IconButton ref={moveRef} size='large' color="primary" onClick={dialog.open}>
+                        <Plane />
+                    </IconButton>
+                </Tooltip>
             }
         >
             <Stack direction={"row"} spacing={2}>
                 <TextField
                     fullWidth
-                    label={t("Zoom")}
+                    label={t("ui.zoom")}
                     name="z"
                     error={!!errors.z}
                     helperText={errors?.z?.message}
@@ -82,7 +85,7 @@ export default function Navigator() {
                 />
                 <TextField
                     fullWidth
-                    label={t("Pixel X")}
+                    label={t("ui.pixel-x")}
                     name="x"
                     error={!!errors.x}
                     helperText={errors?.x?.message}
@@ -100,7 +103,7 @@ export default function Navigator() {
                 />
                 <TextField
                     fullWidth
-                    label={t("Pixel Y")}
+                    label={t("ui.pixel-y")}
                     name="y"
                     error={!!errors.y}
                     helperText={errors?.y?.message}

@@ -79,6 +79,32 @@ const theme = createTheme({
       },
     },
 
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          backgroundColor: alpha(black, 0.75),
+          backdropFilter: 'blur(6px)',
+          color: white,
+          fontSize: '0.75rem',
+          padding: '4px 12px',
+          borderRadius: 8,
+          boxShadow: `0 4px 6px ${alpha(black, 0.2)}`,
+          border: `1px solid ${alpha(white, 0.1)}`,
+        },
+        arrow: {
+          color: alpha(black, 0.75),
+          '&::before': {
+            border: `1px solid ${alpha(white, 0.1)}`,
+          },
+        },
+      },
+      defaultProps: {
+        arrow: true,
+        enterDelay: 400,
+        leaveDelay: 200,
+      },
+    },
+
     MuiTextField: {
       defaultProps: {
         variant: 'outlined',

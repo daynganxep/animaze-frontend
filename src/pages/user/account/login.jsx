@@ -8,9 +8,11 @@ import { useDispatch } from 'react-redux';
 import { LogIn } from 'lucide-react';
 import { uiActions } from '@/redux/slices/ui.slice';
 import logo_text_animaze from "@/assets/images/logo-text-animaze.svg"
+import { useTranslation } from 'react-i18next';
 
 
 export default function LoginButton() {
+    const { t } = useTranslation();
     const { signInDialog } = useSelector(s => s.ui);
     const dispatch = useDispatch();
 
@@ -31,7 +33,7 @@ export default function LoginButton() {
         <GeneralDialog
             dialog={dialog}
             triggerButton={
-                <Tooltip title="Log in">
+                <Tooltip arrow placement="left" title={t("ui.log-in")}>
                     <IconButton
                         ref={loginRef}
                         size="large"
@@ -44,7 +46,7 @@ export default function LoginButton() {
             <Box src={logo_text_animaze} component="img" borderRadius={20} paddingX={4} paddingY={1} bgcolor={(t) => t.palette.background.black}>
             </Box>
             <Box sx={{ textAlign: 'center', my: 2, color: 'text.secondary' }}>
-                Welcome to Animaze! Sign in to start creating and sharing your pixel art animations.
+                {t("ui.welcome")}
             </Box>
             <GoogleLoginOauth2 closeDialog={dialog.close} />
             <Box sx={{
@@ -54,7 +56,7 @@ export default function LoginButton() {
                 color: 'text.secondary',
                 px: 2
             }}>
-                By signing in, you agree to our Terms of Service and Privacy Policy
+                {t("ui.policy")}
             </Box>
         </GeneralDialog>
     );
