@@ -1,12 +1,26 @@
-import { PAINT_TYPE } from "@/configs/const.config";
 import { Button, IconButton, Tooltip } from "@mui/material";
 import { Stack } from "@mui/system";
 import { Brush, Eraser, Scan } from "lucide-react";
 import { memo } from "react";
+import { PAINT_TYPE } from "@/configs/const.config";
+import { useMutation } from "@tanstack/react-query";
+import SectorService from "@/services/sector.service";
+import toast from "@/hooks/toast";
 
-export default memo(function Toolbar({ paintType, togglePaintType, bone, toggleBone }) {
+export default memo(function Toolbar({ paintingPixels, paintType, togglePaintType, bone, toggleBone, }) {
     const isEraserActive = paintType === PAINT_TYPE.ERASER;
     const isBoneActive = bone;
+    const canPaintToServer = paintingPixels?.size > 0;
+
+    const { mutate, isPending } = useMutation({
+        mutationFn: SectorService.paint,
+        onError: () => {
+            toast.success("PAINT FALSE");
+        },
+        onSuccess: () => {
+            toast.success("PAINT SUCCESS");
+        },
+    });
 
     const sx = (x) => {
         return x ? {
@@ -17,9 +31,13 @@ export default memo(function Toolbar({ paintType, togglePaintType, bone, toggleB
         }
     }
 
+    const handleUpdate = () => {
+        mutate({ pixels: Array.from(paintingPixels.values()) });
+    };
+
 
     return (
-        <Stack direction="row" justifyContent="space-between" alignItems="end" p={1}>
+        <Stack direction="row" justifyContent="space-between" alignItems="end" p={1} >
             <Stack direction="row" spacing={2}>
                 <Tooltip title="Eraser">
                     <IconButton
@@ -38,8 +56,17 @@ export default memo(function Toolbar({ paintType, togglePaintType, bone, toggleB
                     </IconButton>
                 </Tooltip>
             </Stack>
-            <Button size="large" variant="outlined" endIcon={<Brush />}>Paint</Button>
+            <Button
+                loading={isPending}
+                onClick={handleUpdate}
+                disabled={!canPaintToServer}
+                size="large"
+                variant="outlined"
+                endIcon={<Brush />}
+            >
+                Paint
+            </Button>
             <span></span>
-        </Stack>
+        </Stack >
     );
 });

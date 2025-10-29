@@ -20,9 +20,7 @@ export default function PaintMode() {
     const [bone, setBone] = useState(true);
     const { frame } = useSelector(s => s.animation);
 
-
     usePaintCursor(paintType);
-
 
     useMapEvents({
         click(e) {
@@ -81,7 +79,7 @@ export default function PaintMode() {
 
     return (
         <Window sx={{ width: "100%" }} close={handleClosePaintMode}>
-            <Toolbar paintType={paintType} togglePaintType={togglePaintType} bone={bone} toggleBone={toggleBone} />
+            <Toolbar paintingPixels={paintingPixels} paintType={paintType} togglePaintType={togglePaintType} bone={bone} toggleBone={toggleBone} />
             <ColorPalette selectedColor={selectedColor} setSelectedColor={setSelectedColor} paintType={paintType} />
             <PaintingPixels paintingPixels={paintingPixels} frame={frame} bone={bone} />
             <HighlightPixel highlight={highlight} selectedColor={selectedColor} paintType={paintType} />

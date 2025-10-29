@@ -25,6 +25,10 @@ const SectorService = {
 
         return [{ frames, accountLegend, etag: newEtag }, null];
     },
+
+    paint(body) {
+        return service(axios.post("/sectors/paint", body));
+    },
 };
 
 export default SectorService;
