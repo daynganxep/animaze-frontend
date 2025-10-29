@@ -113,13 +113,17 @@ export default function PaintMode() {
         });
     }
 
+    function handleClear() {
+        setPaintingPixels(new Map());
+    }
+
     function handleClosePaintMode() {
         dispatch(uiActions.setStates({ field: "paintMode", value: false }));
     }
 
     return (
         <Window sx={{ width: "100%" }} close={handleClosePaintMode}>
-            <Toolbar paintingPixels={paintingPixels} paintType={paintType} togglePaintType={togglePaintType} bone={bone} toggleBone={toggleBone} />
+            <Toolbar paintingPixels={paintingPixels} handleClear={handleClear} paintType={paintType} togglePaintType={togglePaintType} bone={bone} toggleBone={toggleBone} />
             <ColorPalette selectedColor={selectedColor} setSelectedColor={setSelectedColor} paintType={paintType} />
             <PaintingPixels paintingPixels={paintingPixels} frame={frame} bone={bone} />
             <HighlightPixel highlight={highlight} selectedColor={selectedColor} paintType={paintType} />

@@ -32,7 +32,8 @@
         "static": "Static",
         "paint": "Paint",
         "eraser": "Eraser",
-        "bone": "Bone"
+        "bone": "Bone",
+        "clear": "Clear"
     },
     "api-code": {
         "app-f-1": "Error",
