@@ -1,6 +1,6 @@
 import { uiActions } from "@/redux/slices/ui.slice";
 import { useDispatch } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Window from "@/components/ui/window";
 import { useMapEvents } from "react-leaflet";
@@ -19,8 +19,33 @@ export default function PaintMode() {
     const [paintType, setPaintType] = useState(PAINT_TYPE.PAINT);
     const [bone, setBone] = useState(true);
     const { frame } = useSelector(s => s.animation);
+    const [isSpaceDown, setIsSpaceDown] = useState(false);
+
 
     usePaintCursor(paintType);
+
+    useEffect(() => {
+        function handleKeyDown(e) {
+            if (e.code === "Space") {
+                e.preventDefault();
+                setIsSpaceDown(true);
+            }
+        }
+        function handleKeyUp(e) {
+            if (e.code === "Space") {
+                e.preventDefault();
+                setIsSpaceDown(false);
+            }
+        }
+
+        window.addEventListener("keydown", handleKeyDown);
+        window.addEventListener("keyup", handleKeyUp);
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+            window.removeEventListener("keyup", handleKeyUp);
+        };
+    }, []);
+
 
     useMapEvents({
         click(e) {
@@ -43,6 +68,21 @@ export default function PaintMode() {
             const x = Math.floor(e.latlng.lng);
             const y = Math.floor(e.latlng.lat);
             setHighlight({ x, y });
+
+            if (isSpaceDown) {
+                switch (paintType) {
+                    case PAINT_TYPE.PAINT: {
+                        if (selectedColor !== null && selectedColor !== undefined) {
+                            handlePaint(x, y);
+                        }
+                        break;
+                    }
+                    case PAINT_TYPE.ERASER: {
+                        handleEraser(x, y);
+                        break;
+                    }
+                }
+            }
         },
         mouseout() {
             setHighlight(null);
