@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { animationActions } from '@/redux/slices/animation.slice';
 import { FRAMES_COUNT, SECTOR_SIZE, WORLD_DIMENSION } from '@/configs/env.config';
 
-export default function SectorLayer() {
+export default function Sectors() {
     const map = useMap();
     const [sectors, setSectors] = useState(new Map());
     const [visibleSectors, setVisibleSectors] = useState(new Set());

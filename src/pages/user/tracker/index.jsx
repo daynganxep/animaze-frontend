@@ -1,4 +1,4 @@
-import { black, white } from '@/app/app/theme';
+import { white } from '@/app/app/theme';
 import PaintButton from '@/components/ui/paint-button';
 import Pixel from '@/components/ui/pixel';
 import Window from '@/components/ui/window';
@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { useMapEvents } from 'react-leaflet';
 import { useSelector } from 'react-redux';
 
-function PixelTracker() {
+function Tracker() {
     const [highlight, setHighlight] = useState(null);
     const [selected, setSelected] = useState(null);
     const { mode, frame } = useSelector(s => s.animation);
@@ -71,4 +71,4 @@ function PixelTracker() {
     );
 }
 
-export default PixelTracker;
+export default Tracker;

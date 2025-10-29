@@ -3,9 +3,9 @@ import { Stack } from '@mui/material';
 import L from 'leaflet';
 import Account from './account';
 import Navigator from './navigator';
-import SectorLayer from './sector-layer';
-import PixelTracker from './pixel-tracker';
-import CustomZoomControl from './zoom-control';
+import Sectors from './sectors';
+import Tracker from './tracker/index.jsx';
+import ZoomControl from './zoom-control';
 import ViewControl from './view-control';
 import PaintMode from './paint-mode';
 import { useSelector } from 'react-redux';
@@ -40,20 +40,20 @@ export default function PixelMap() {
                 zoomControl={false}
             >
                 <Stack direction="column" position="absolute" top={0} left={0} padding={2} spacing={2} zIndex={1001} >
-                    <CustomZoomControl></CustomZoomControl>
+                    <ZoomControl />
                 </Stack>
                 <Stack direction="column" position="absolute" top={0} right={0} padding={2} spacing={2} zIndex={1001} >
                     <Account />
                     <Navigator />
-                    <ViewControl></ViewControl>
+                    <ViewControl />
                 </Stack>
                 <Stack direction="row" position="absolute" bottom={0} padding={2} zIndex={1001} width="100%" justifyContent="center">
                     {paintMode ?
                         <PaintMode /> :
-                        <PixelTracker />
+                        <Tracker />
                     }
                 </Stack>
-                <SectorLayer />
+                <Sectors />
             </MapContainer>
         </Stack>
     );
