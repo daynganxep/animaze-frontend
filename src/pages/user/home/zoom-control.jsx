@@ -1,9 +1,8 @@
 import { IconButton, Stack } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
 import { useMap } from 'react-leaflet';
 import { useEffect, useRef } from 'react';
 import L from "leaflet";
+import { Minus, Plus } from 'lucide-react';
 
 export default function CustomZoomControl() {
     const ref = useRef(null);
@@ -29,13 +28,13 @@ export default function CustomZoomControl() {
                 size="small"
                 onClick={handleZoomIn}
             >
-                <AddIcon />
+                <Plus />
             </IconButton>
             <IconButton
                 size="small"
                 onClick={handleZoomOut}
             >
-                <RemoveIcon />
+                <Minus />
             </IconButton>
         </Stack>
     );

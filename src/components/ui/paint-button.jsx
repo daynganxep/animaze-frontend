@@ -1,11 +1,11 @@
 import { ANIMATION_MODE } from "@/configs/const.config";
 import { animationActions } from "@/redux/slices/animation.slice";
 import { uiActions } from "@/redux/slices/ui.slice";
-import { ColorLens } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import L from "leaflet";
+import { Palette } from "lucide-react";
 
 function PaintButton() {
     const dispatch = useDispatch();
@@ -32,7 +32,7 @@ function PaintButton() {
         size="large"
         sx={{ width: "100%", maxWidth: "300px", borderRadius: 10 }}
         onClick={handeOpenPaintMode}
-        endIcon={<ColorLens></ColorLens>}>
+        endIcon={<Palette></Palette>}>
         Paint
     </Button>);
 }

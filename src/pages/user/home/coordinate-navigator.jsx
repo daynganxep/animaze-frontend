@@ -4,7 +4,7 @@ import {
     Stack,
     IconButton,
 } from '@mui/material';
-import { LocalAirport } from '@mui/icons-material';
+import { Plane } from 'lucide-react';
 import { useMap } from 'react-leaflet';
 import { useTranslation } from 'react-i18next';
 import useDialog from '@/hooks/use-dialog';
@@ -56,7 +56,7 @@ export default function CoordinateNavigator() {
             dialog={dialog}
             triggerButton={
                 <IconButton ref={moveRef} size='large' color="primary" onClick={dialog.open}>
-                    <LocalAirport />
+                    <Plane />
                 </IconButton>
             }
         >

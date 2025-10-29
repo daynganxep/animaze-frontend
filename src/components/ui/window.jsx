@@ -1,6 +1,6 @@
-import { Close } from "@mui/icons-material";
 import { Box, IconButton } from "@mui/material";
 import L from 'leaflet';
+import { X } from "lucide-react";
 import { useEffect, useRef } from "react";
 
 
@@ -20,7 +20,7 @@ function Window({ close, children, sx = {} }) {
         ...sx
     }}>
         <IconButton size="small" onClick={close} sx={{ position: "absolute", top: 12, right: 12 }}>
-            <Close></Close>
+            <X></X>
         </IconButton>
         {children}
     </Box>);

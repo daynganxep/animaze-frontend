@@ -1,6 +1,5 @@
 import GeneralDialog from '@/components/dialog/general-dialog';
 import { Avatar, Box, Button, IconButton, Stack, Tooltip, Typography } from '@mui/material';
-import { ContentCopy, Login, Logout } from '@mui/icons-material';
 import GoogleLoginOauth2 from '@/components/ui/google-login-oauth2';
 import { useSelector } from 'react-redux';
 import logo_text_animaze from "@/assets/images/logo-text-animaze.svg"
@@ -12,6 +11,7 @@ import Tippy from '@tippyjs/react/headless';
 import Window from '@/components/ui/window';
 import useTippy from '@/hooks/use-tippy';
 import { authActions } from '@/redux/slices/auth.slice';
+import { Copy, LogIn, LogOut } from 'lucide-react';
 
 
 export default function Account() {
@@ -93,7 +93,7 @@ export default function Account() {
                                 </Typography>
 
                                 <Tooltip title={copied ? "Copied!" : "Copy ID"}>
-                                    <ContentCopy onClick={handleCopy} fontSize="small" />
+                                    <Copy onClick={handleCopy} fontSize="small" />
                                 </Tooltip>
                             </Stack>
 
@@ -106,7 +106,7 @@ export default function Account() {
                         onClick={handleLogout}
                         size="medium"
                         sx={{ width: "100%", borderRadius: 10 }}
-                        endIcon={<Logout></Logout>}>
+                        endIcon={<LogOut></LogOut>}>
                         Log out
                     </Button>
                 </Window>
@@ -139,7 +139,7 @@ export default function Account() {
                     size="large"
                     onClick={dialog.open}
                 >
-                    <Login />
+                    <LogIn />
                 </IconButton>
             }>
             <Box src={logo_text_animaze} component="img" borderRadius={20} paddingX={4} paddingY={1} bgcolor={(t) => t.palette.background.black}>

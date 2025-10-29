@@ -2,11 +2,11 @@ import { Stack, IconButton, ToggleButtonGroup, ToggleButton } from '@mui/materia
 import { useDispatch, useSelector } from 'react-redux';
 import { ANIMATION_MODE } from '@/configs/const.config';
 import { animationActions } from '@/redux/slices/animation.slice';
-import { PlayArrow, Pause } from '@mui/icons-material';
 import { FRAMES_COUNT } from '@/configs/env.config';
 import { uiActions } from '@/redux/slices/ui.slice';
 import { useEffect, useRef } from 'react';
 import L from "leaflet";
+import { Play, Pause } from 'lucide-react';
 
 export default function ViewControl() {
     const dispatch = useDispatch();
@@ -41,7 +41,7 @@ export default function ViewControl() {
         >
             <IconButton size='large' onClick={toggleMode}>
                 {mode === ANIMATION_MODE.STATIC ? (
-                    <PlayArrow />
+                    <Play />
                 ) : (
                     <Pause />
                 )}
