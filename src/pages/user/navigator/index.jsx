@@ -17,7 +17,7 @@ import L from "leaflet";
 import { MAX_ZOOM, MIN_ZOOM } from '@/configs/const.config';
 import { WORLD_DIMENSION } from '@/configs/env.config';
 
-export default function CoordinateNavigator() {
+export default function Navigator() {
     const map = useMap();
     const { t } = useTranslation();
     const dialog = useDialog();

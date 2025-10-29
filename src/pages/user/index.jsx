@@ -1,16 +1,16 @@
 import { MapContainer } from 'react-leaflet';
-import L from 'leaflet';
-import SectorLayer from './sector-layer';
-import CoordinateNavigator from './coordinate-navigator';
-import PixelTracker from './pixel-tracker';
 import { Stack } from '@mui/material';
+import L from 'leaflet';
 import Account from './account';
+import Navigator from './navigator';
+import SectorLayer from './sector-layer';
+import PixelTracker from './pixel-tracker';
 import CustomZoomControl from './zoom-control';
 import ViewControl from './view-control';
-import { WORLD_DIMENSION } from '@/configs/env.config';
-import { useSelector } from 'react-redux';
 import PaintMode from './paint-mode';
+import { useSelector } from 'react-redux';
 import { white } from '@/app/app/theme';
+import { WORLD_DIMENSION } from '@/configs/env.config';
 import { MAX_ZOOM, MIN_ZOOM } from '@/configs/const.config';
 
 const CustomSimpleCRS = L.extend({}, L.CRS.Simple, {
@@ -44,7 +44,7 @@ export default function PixelMap() {
                 </Stack>
                 <Stack direction="column" position="absolute" top={0} right={0} padding={2} spacing={2} zIndex={1001} >
                     <Account />
-                    <CoordinateNavigator />
+                    <Navigator />
                     <ViewControl></ViewControl>
                 </Stack>
                 <Stack direction="row" position="absolute" bottom={0} padding={2} zIndex={1001} width="100%" justifyContent="center">
