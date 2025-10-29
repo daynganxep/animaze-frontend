@@ -1,11 +1,22 @@
 import { SECTOR_SIZE } from "@/configs/env.config";
 import { SectorDataParser } from "@/tools/data.tool";
 
-let _sectorsCache = new Map();
+const MAX_CACHE_SIZE = 100;
+const _sectorsCache = new Map();
+const _lruOrder = []; // Track order of sector access
 
 export function useSectorsCache() {
     function get(sectorId) {
-        return _sectorsCache.get(sectorId);
+        const data = _sectorsCache.get(sectorId);
+        if (data) {
+            // Move to end of LRU list (most recently used)
+            const index = _lruOrder.indexOf(sectorId);
+            if (index > -1) {
+                _lruOrder.splice(index, 1);
+            }
+            _lruOrder.push(sectorId);
+        }
+        return data;
     }
 
     function getPixel(frame, pixelX, pixelY) {
@@ -21,7 +32,22 @@ export function useSectorsCache() {
     }
 
     function set(sectorId, data) {
+        // Evict oldest item if cache is full
+        if (_sectorsCache.size >= MAX_CACHE_SIZE && !_sectorsCache.has(sectorId)) {
+            const oldestId = _lruOrder.shift(); // Remove from front (least recently used)
+            if (oldestId) {
+                _sectorsCache.delete(oldestId);
+            }
+        }
+
         _sectorsCache.set(sectorId, data);
+
+        // Update LRU order
+        const index = _lruOrder.indexOf(sectorId);
+        if (index > -1) {
+            _lruOrder.splice(index, 1);
+        }
+        _lruOrder.push(sectorId);
     }
 
     function getAll() {

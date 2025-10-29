@@ -100,7 +100,7 @@ export default function Sectors() {
             });
 
             const results = await Promise.all(fetchPromises);
-            results.forEach((result) => sectorsCache.set(result.sectorId, result.data));
+            results.forEach((result) => result && sectorsCache.set(result.sectorId, result.data));
         };
 
         fetchNewSectors();

@@ -7,7 +7,7 @@ import toast from '@/hooks/toast';
 import { useSectorsCache } from '@/hooks/use-sectors-cache';
 import AccountService from '@/services/account.service';
 import { Typography, Stack, Divider } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMapEvents } from 'react-leaflet';
 import { useSelector } from 'react-redux';
 import PaintedAccount from './painted-account';
@@ -38,6 +38,16 @@ function Tracker() {
         },
     });
 
+    useEffect(() => {
+        if (selected) {
+            const { x, y } = selected;
+            const pixel = sectorsCache.getPixel(frame, x, y);
+            setSelected({ x, y, pixel });
+            if (isStatic) getPixelAccount(pixel?.publicId);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [frame, isStatic])
+
     async function getPixelAccount(publicId) {
         if (!publicId) {
             setSelectedAccount(null);
@@ -46,6 +56,7 @@ function Tracker() {
         const [res, err] = await AccountService.getByPublicID(publicId);
         if (err) {
             toast.error(err.messageCode);
+            setSelectedAccount(null);
             return
         }
         setSelectedAccount(res.data);
