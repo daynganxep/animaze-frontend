@@ -56,7 +56,6 @@ export default function Account() {
             interactive={true}
             visible={tippy.opening}
             placement='left-start'
-            hideOnClick={true}
             render={(attrs) => (
                 <Window {...attrs} close={tippy.close}>
                     <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between" mb={1}>

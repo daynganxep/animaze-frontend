@@ -1,7 +1,9 @@
+import { MAX_ZOOM, MIN_ZOOM } from "@/configs/const.config";
+import { WORLD_DIMENSION } from "@/configs/env.config";
 import Joi from "joi";
 
 export const coordsSchema = Joi.object({
-    z: Joi.number().integer(),
-    x: Joi.number().integer(),
-    y: Joi.number().integer(),
+    z: Joi.number().min(MIN_ZOOM).max(MAX_ZOOM),
+    x: Joi.number().integer().min(0).max(WORLD_DIMENSION),
+    y: Joi.number().integer().min(0).max(WORLD_DIMENSION),
 });

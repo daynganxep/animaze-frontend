@@ -14,6 +14,8 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import { coordsSchema } from '@/validations/coords-chema';
 import { useEffect, useRef } from 'react';
 import L from "leaflet";
+import { MAX_ZOOM, MIN_ZOOM } from '@/configs/const.config';
+import { WORLD_DIMENSION } from '@/configs/env.config';
 
 export default function CoordinateNavigator() {
     const map = useMap();
@@ -66,7 +68,16 @@ export default function CoordinateNavigator() {
                     error={!!errors.z}
                     helperText={errors?.z?.message}
                     required
-                    type='number'
+                    type="number"
+                    slotProps={{
+                        htmlInput: {
+                            type: "number",
+                            step: 0.25,
+                            min: MIN_ZOOM,
+                            max: MAX_ZOOM,
+                            placeholder: `(${MIN_ZOOM} - ${MAX_ZOOM})`,
+                        },
+                    }}
                     {...register("z")}
                 />
                 <TextField
@@ -76,7 +87,15 @@ export default function CoordinateNavigator() {
                     error={!!errors.x}
                     helperText={errors?.x?.message}
                     required
-                    type='number'
+                    type="number"
+                    slotProps={{
+                        htmlInput: {
+                            min: 0,
+                            max: WORLD_DIMENSION - 1,
+                            placeholder: `(${0} - ${WORLD_DIMENSION - 1})`,
+
+                        },
+                    }}
                     {...register("x")}
                 />
                 <TextField
@@ -86,7 +105,14 @@ export default function CoordinateNavigator() {
                     error={!!errors.y}
                     helperText={errors?.y?.message}
                     required
-                    type='number'
+                    type="number"
+                    slotProps={{
+                        htmlInput: {
+                            min: 0,
+                            max: WORLD_DIMENSION - 1,
+                            placeholder: `(${0} - ${WORLD_DIMENSION - 1})`,
+                        },
+                    }}
                     {...register("y")}
                 />
             </Stack>

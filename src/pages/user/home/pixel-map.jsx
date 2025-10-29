@@ -11,6 +11,7 @@ import { WORLD_DIMENSION } from '@/configs/env.config';
 import { useSelector } from 'react-redux';
 import PaintMode from './paint-mode';
 import { white } from '@/app/app/theme';
+import { MAX_ZOOM, MIN_ZOOM } from '@/configs/const.config';
 
 const CustomSimpleCRS = L.extend({}, L.CRS.Simple, {
     transformation: new L.Transformation(1, 0, 1, 0),
@@ -26,8 +27,8 @@ export default function PixelMap() {
                 crs={CustomSimpleCRS}
                 center={[WORLD_DIMENSION / 2, WORLD_DIMENSION / 2]}
                 zoom={0}
-                minZoom={0}
-                maxZoom={9}
+                minZoom={MIN_ZOOM}
+                maxZoom={MAX_ZOOM}
                 style={{ width: '100%', height: '100%', backgroundColor: white }}
                 maxBounds={[
                     [0, 0],
