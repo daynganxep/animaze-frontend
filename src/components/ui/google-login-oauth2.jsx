@@ -14,7 +14,6 @@ export default function GoogleLoginOauth2({ closeDialog }) {
             toast.error(err.messageCode);
             return;
         }
-        console.log({ res })
         toast.success(res.messageCode);
         dispatch(
             authActions.setStates({ field: 'tokens', value: res.data })
@@ -37,7 +36,7 @@ export default function GoogleLoginOauth2({ closeDialog }) {
                 theme="filled_black"
                 size="large"
                 shape="pill"
-                text="signin_with"
+                text="continue_with"
                 logo_alignment="left"
                 width="100%"
                 cancel_on_tap_outside

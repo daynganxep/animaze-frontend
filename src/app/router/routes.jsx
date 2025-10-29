@@ -2,8 +2,8 @@ import { createBrowserRouter } from 'react-router-dom';
 import { ADMIN_ROUTE_TYPES, USER_ROUTE_TYPES } from '@/app/router/route-types';
 import AdminMainLayout from '@/layouts/admin/main-layout';
 import UserMainLayout from '@/layouts/user/main-layout';
-import NotFound from '@/pages/user/not-found';
-import Home from '@/pages/user/home';
+import NotFound from '@/components/ui/not-found';
+import IndexUser from '@/pages/user';
 import WrapPage from '@/components/ui/wrap-page';
 
 const router = createBrowserRouter([
@@ -13,7 +13,7 @@ const router = createBrowserRouter([
             {
                 element: <AdminMainLayout />,
                 children: [
-                    { path: '/@admin', element: <WrapPage title="Admin Animaze" Component={Home} /> },
+                    { path: '/@admin', element: <WrapPage title="Admin Animaze" Component={IndexUser} /> },
                 ],
             },
         ],
@@ -24,7 +24,7 @@ const router = createBrowserRouter([
             {
                 element: <UserMainLayout />,
                 children: [
-                    { path: '/', element: <WrapPage title="Animaze" Component={Home} /> },
+                    { path: '/', element: <WrapPage title="Animaze" Component={IndexUser} /> },
                     { path: '*', element: <WrapPage title="Not found" Component={NotFound} /> },
                 ],
             },
