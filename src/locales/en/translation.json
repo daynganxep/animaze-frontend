@@ -50,6 +50,7 @@
         "auth-s-2": "Refresh token success",
         "account-f-1": "Account not found",
         "account-s-1": "Get my account successfuly",
+        "account-f-2": "Account not found",
         "sector-s-1": "Paint successfuly!",
         "sector-f-1": "Sector not found",
         "auth-f-3-1": "Authorization token not found"

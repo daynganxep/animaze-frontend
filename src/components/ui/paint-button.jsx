@@ -6,8 +6,10 @@ import { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import L from "leaflet";
 import { Palette } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
-function PaintButton() {
+function PaintButton({ sx }) {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
     const { logged } = useSelector(s => s.auth);
 
@@ -30,10 +32,10 @@ function PaintButton() {
         ref={ref}
         variant="outlined"
         size="large"
-        sx={{ width: "100%", maxWidth: "300px", borderRadius: 10 }}
+        sx={{ width: "100%", maxWidth: "200px", borderRadius: 10, ...sx }}
         onClick={handeOpenPaintMode}
         endIcon={<Palette></Palette>}>
-        Paint
+        {t("ui.paint")}
     </Button>);
 }
 

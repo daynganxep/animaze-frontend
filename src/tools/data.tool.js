@@ -26,6 +26,6 @@ export class SectorDataParser {
     const accountIndex = this.dataView.getUint16(pixelStartOffset + 1, true);
     const color = (colorIndex === NULL_COLOR_INDEX) ? null : this.colorPalette[colorIndex].color;
     const accountId = (accountIndex === NULL_ACCOUNT_INDEX) ? null : this.accountLegend[accountIndex];
-    return { color, accountId };
+    return { color, accountId, publicId: accountId };
   }
 }

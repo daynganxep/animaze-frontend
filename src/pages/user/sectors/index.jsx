@@ -8,14 +8,16 @@ import { ANIMATION_MODE } from '@/configs/const.config';
 import { useDispatch } from 'react-redux';
 import { animationActions } from '@/redux/slices/animation.slice';
 import { FRAMES_COUNT, SECTOR_SIZE, WORLD_DIMENSION } from '@/configs/env.config';
+import { useSectorsCache } from '@/hooks/use-sectors-cache';
 
 export default function Sectors() {
     const map = useMap();
-    const [sectors, setSectors] = useState(new Map());
+    const sectorsCache = useSectorsCache();
     const [visibleSectors, setVisibleSectors] = useState(new Set());
     const { mode, frame, speed } = useSelector((state) => state.animation);
     const dispatch = useDispatch();
     const layerRef = useRef(L.layerGroup()).current;
+
 
     useEffect(() => {
         const frameInterval = setInterval(() => {
@@ -59,7 +61,7 @@ export default function Sectors() {
     useEffect(() => {
         const fetchNewSectors = async () => {
             const fetchPromises = Array.from(visibleSectors).map(async (sectorId) => {
-                const cached = sectors.get(sectorId);
+                const cached = sectorsCache.get(sectorId);
                 const [x, y] = sectorId.split(':').map(Number);
                 const [data, err] = await SectorService.get(x, y, cached?.etag);
 
@@ -98,13 +100,7 @@ export default function Sectors() {
             });
 
             const results = await Promise.all(fetchPromises);
-            setSectors((prev) => {
-                const next = new Map(prev);
-                results.forEach((result) => {
-                    if (result) next.set(result.sectorId, result.data);
-                });
-                return next;
-            });
+            results.forEach((result) => sectorsCache.set(result.sectorId, result.data));
         };
 
         fetchNewSectors();
@@ -113,7 +109,7 @@ export default function Sectors() {
 
     useEffect(() => {
         visibleSectors.forEach((sectorId) => {
-            const sector = sectors.get(sectorId);
+            const sector = sectorsCache.get(sectorId);
             if (!sector || !sector.frameCanvases) return;
 
             const canvas = sector.frameCanvases[frame];
@@ -138,7 +134,8 @@ export default function Sectors() {
                 overlay.addTo(layerRef);
             }
         });
-    }, [frame, visibleSectors, sectors, layerRef]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [frame, visibleSectors, layerRef]);
 
     useEffect(() => {
         layerRef.addTo(map);
