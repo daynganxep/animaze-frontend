@@ -33,7 +33,7 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 8,
+          borderRadius: 10,
           color: alpha(white, 1),
           backgroundColor: alpha(black, 1),
           transition: 'all 0.25s',

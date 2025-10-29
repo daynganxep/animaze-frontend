@@ -2,8 +2,16 @@ import { IconButton, Stack } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { useMap } from 'react-leaflet';
+import { useEffect, useRef } from 'react';
+import L from "leaflet";
 
 export default function CustomZoomControl() {
+    const ref = useRef(null);
+
+    useEffect(() => {
+        if (ref.current) L.DomEvent.disableClickPropagation(ref.current);
+    }, []);
+
     const map = useMap();
 
     const handleZoomIn = () => {
@@ -16,7 +24,7 @@ export default function CustomZoomControl() {
 
 
     return (
-        <Stack spacing={1}>
+        <Stack ref={ref} spacing={1}>
             <IconButton
                 size="small"
                 onClick={handleZoomIn}

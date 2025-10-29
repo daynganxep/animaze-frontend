@@ -11,7 +11,6 @@ import { WORLD_DIMENSION } from '@/configs/env.config';
 import { useSelector } from 'react-redux';
 import PaintMode from './paint-mode';
 import { white } from '@/app/app/theme';
-import { useEffect, useRef } from 'react';
 
 const CustomSimpleCRS = L.extend({}, L.CRS.Simple, {
     transformation: new L.Transformation(1, 0, 1, 0),
@@ -19,15 +18,6 @@ const CustomSimpleCRS = L.extend({}, L.CRS.Simple, {
 
 export default function PixelMap() {
     const { paintMode } = useSelector(s => s.ui);
-    const topLeftRef = useRef(null);
-    const topRightRef = useRef(null);
-    const bottomRef = useRef(null);
-
-    useEffect(() => {
-        if (topLeftRef.current) L.DomEvent.disableClickPropagation(topLeftRef.current);
-        if (topRightRef.current) L.DomEvent.disableClickPropagation(topRightRef.current);
-        if (bottomRef.current) L.DomEvent.disableClickPropagation(bottomRef.current);
-    }, []);
 
     return (
         <Stack position="relative" width="100vw" height="100vh"
@@ -48,15 +38,15 @@ export default function PixelMap() {
                 zoomDelta={0.25}
                 zoomControl={false}
             >
-                <Stack ref={topLeftRef} direction="column" position="absolute" top={0} left={0} padding={2} spacing={2} zIndex={1001} >
+                <Stack direction="column" position="absolute" top={0} left={0} padding={2} spacing={2} zIndex={1001} >
                     <CustomZoomControl></CustomZoomControl>
                 </Stack>
-                <Stack ref={topRightRef} direction="column" position="absolute" top={0} right={0} padding={2} spacing={2} zIndex={1001} >
+                <Stack direction="column" position="absolute" top={0} right={0} padding={2} spacing={2} zIndex={1001} >
                     <Account />
                     <CoordinateNavigator />
                     <ViewControl></ViewControl>
                 </Stack>
-                <Stack ref={bottomRef} direction="row" position="absolute" bottom={0} padding={2} zIndex={1001} width="100%" justifyContent="center">
+                <Stack direction="row" position="absolute" bottom={0} padding={2} zIndex={1001} width="100%" justifyContent="center">
                     {paintMode ?
                         <PaintMode /> :
                         <PixelTracker />

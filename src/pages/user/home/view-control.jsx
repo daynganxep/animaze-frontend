@@ -5,10 +5,20 @@ import { animationActions } from '@/redux/slices/animation.slice';
 import { PlayArrow, Pause } from '@mui/icons-material';
 import { FRAMES_COUNT } from '@/configs/env.config';
 import { uiActions } from '@/redux/slices/ui.slice';
+import { useEffect, useRef } from 'react';
+import L from "leaflet";
 
 export default function ViewControl() {
     const dispatch = useDispatch();
     const { mode, frame } = useSelector(state => state.animation);
+
+
+    const ref = useRef(null);
+
+    useEffect(() => {
+        if (ref.current) L.DomEvent.disableClickPropagation(ref.current);
+    }, []);
+
 
     const toggleMode = () => {
         const newMode =
@@ -27,6 +37,7 @@ export default function ViewControl() {
         <Stack
             direction="column"
             spacing={2}
+            ref={ref}
         >
             <IconButton size='large' onClick={toggleMode}>
                 {mode === ANIMATION_MODE.STATIC ? (

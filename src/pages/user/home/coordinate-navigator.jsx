@@ -12,11 +12,20 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { coordsSchema } from '@/validations/coords-chema';
+import { useEffect, useRef } from 'react';
+import L from "leaflet";
 
 export default function CoordinateNavigator() {
     const map = useMap();
     const { t } = useTranslation();
     const dialog = useDialog();
+
+
+    const moveRef = useRef(null);
+
+    useEffect(() => {
+        if (moveRef.current) L.DomEvent.disableClickPropagation(moveRef.current);
+    }, []);
 
     const form = useForm({
         resolver: joiResolver(coordsSchema),
@@ -44,7 +53,7 @@ export default function CoordinateNavigator() {
             mutation={mutation}
             dialog={dialog}
             triggerButton={
-                <IconButton size='large' color="primary" onClick={dialog.open}>
+                <IconButton ref={moveRef} size='large' color="primary" onClick={dialog.open}>
                     <LocalAirport />
                 </IconButton>
             }
