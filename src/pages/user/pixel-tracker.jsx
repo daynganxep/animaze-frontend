@@ -1,3 +1,4 @@
+import { black, white } from '@/app/app/theme';
 import PaintButton from '@/components/ui/paint-button';
 import Pixel from '@/components/ui/pixel';
 import Window from '@/components/ui/window';
@@ -35,8 +36,8 @@ function PixelTracker() {
 
     return (
         <>
-            {highlight && <Pixel x={highlight.x} y={highlight.y} opacity={0.1} />}
-            {selected && <Pixel x={selected.x} y={selected.y} />}
+            {highlight && <Pixel x={highlight.x} y={highlight.y} c={white} opacity={0.1} b={true} />}
+            {selected && <Pixel x={selected.x} y={selected.y} c={white} opacity={0.1} b={true} />}
 
             {(selected && isStatic) ? (
                 <Window close={handleClose}>

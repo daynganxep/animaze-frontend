@@ -17,6 +17,7 @@ const theme = createTheme({
       black: black,
       default: alpha(black, 0.6),
       paper: alpha(black, 0.75),
+      light: alpha(white, 0.2),
     },
     text: {
       primary: white,
@@ -60,6 +61,9 @@ const theme = createTheme({
           backdropFilter: 'blur(6px)',
           color: white,
           '&:hover': {
+            backgroundColor: alpha(black, 1),
+          },
+          '&.active': {
             backgroundColor: alpha(black, 1),
           },
         },

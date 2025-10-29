@@ -9,7 +9,7 @@ import ColorPalette from "./color-palette";
 import HighlightPixel from "./highlight-pixel";
 import PaintingPixels from "./painting-pixels";
 import { PAINT_TYPE } from "@/configs/const.config";
-
+import usePaintCursor from "./use-paint-cursor";
 
 export default function PaintMode() {
     const dispatch = useDispatch();
@@ -19,6 +19,10 @@ export default function PaintMode() {
     const [paintType, setPaintType] = useState(PAINT_TYPE.PAINT);
     const [bone, setBone] = useState(true);
     const { frame } = useSelector(s => s.animation);
+
+
+    usePaintCursor(paintType);
+
 
     useMapEvents({
         click(e) {
@@ -80,7 +84,7 @@ export default function PaintMode() {
             <Toolbar paintType={paintType} togglePaintType={togglePaintType} bone={bone} toggleBone={toggleBone} />
             <ColorPalette selectedColor={selectedColor} setSelectedColor={setSelectedColor} paintType={paintType} />
             <PaintingPixels paintingPixels={paintingPixels} frame={frame} bone={bone} />
-            <HighlightPixel highlight={highlight} selectedColor={selectedColor} />
+            <HighlightPixel highlight={highlight} selectedColor={selectedColor} paintType={paintType} />
         </Window>
     );
 }
