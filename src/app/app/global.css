@@ -76,3 +76,11 @@ body {
     image-rendering: -webkit-crisp-edges; /* Webkit (Chrome, Safari) */
     image-rendering: pixelated; /* Standard */
 }
+
+.leaflet-container {
+    pointer-events: auto;
+}
+
+.ui-overlay {
+    pointer-events: auto;
+}

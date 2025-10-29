@@ -4,6 +4,7 @@ import { ANIMATION_MODE } from '@/configs/const.config';
 import { animationActions } from '@/redux/slices/animation.slice';
 import { PlayArrow, Pause } from '@mui/icons-material';
 import { FRAMES_COUNT } from '@/configs/env.config';
+import { uiActions } from '@/redux/slices/ui.slice';
 
 export default function ViewControl() {
     const dispatch = useDispatch();
@@ -13,9 +14,10 @@ export default function ViewControl() {
         const newMode =
             mode === ANIMATION_MODE.STATIC ? ANIMATION_MODE.DYNAMIC : ANIMATION_MODE.STATIC;
         dispatch(animationActions.setStates({ field: 'mode', value: newMode }));
+        dispatch(uiActions.setStates({ field: 'paintMode', value: false }));
     };
 
-    const handleFrameChange = (_, newFrame) => {
+    const handleFrameChange = (e, newFrame) => {
         if (newFrame !== null) {
             dispatch(animationActions.setStates({ field: 'frame', value: newFrame }));
         }

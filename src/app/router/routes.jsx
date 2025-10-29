@@ -13,7 +13,7 @@ const router = createBrowserRouter([
             {
                 element: <AdminMainLayout />,
                 children: [
-                    { path: '/@admin', element: <WrapPage title="Admin Dashboard" Component={Home} /> },
+                    { path: '/@admin', element: <WrapPage title="Admin Animaze" Component={Home} /> },
                 ],
             },
         ],
@@ -24,8 +24,8 @@ const router = createBrowserRouter([
             {
                 element: <UserMainLayout />,
                 children: [
-                    { path: '/', element: <WrapPage title="Trang chủ" Component={Home} /> },
-                    { path: '*', element: <WrapPage title="Không tìm thấy trang" Component={NotFound} /> },
+                    { path: '/', element: <WrapPage title="Animaze" Component={Home} /> },
+                    { path: '*', element: <WrapPage title="Not found" Component={NotFound} /> },
                 ],
             },
         ],

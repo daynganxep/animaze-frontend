@@ -1,43 +1,71 @@
+import PaintButton from '@/components/ui/paint-button';
 import Pixel from '@/components/ui/pixel';
-import { Box, Typography } from '@mui/material';
+import Window from '@/components/ui/window';
+import { ANIMATION_MODE } from '@/configs/const.config';
+import { Typography, Stack, Divider } from '@mui/material';
 import { useState } from 'react';
-import { useMap, useMapEvents } from 'react-leaflet';
+import { useMapEvents } from 'react-leaflet';
+import { useSelector } from 'react-redux';
 
 function PixelTracker() {
-    const map = useMap();
     const [highlight, setHighlight] = useState(null);
-    const [coords, setCoords] = useState({ z: map.getZoom(), x: 0, y: 0 });
+    const [selected, setSelected] = useState(null);
+    const { mode, frame } = useSelector(s => s.animation);
+    const isStatic = mode === ANIMATION_MODE.STATIC;
 
     useMapEvents({
+        click(e) {
+            const x = Math.floor(e.latlng.lng);
+            const y = Math.floor(e.latlng.lat);
+            setSelected({ x, y });
+        },
         mousemove(e) {
             const x = Math.floor(e.latlng.lng);
             const y = Math.floor(e.latlng.lat);
             setHighlight({ x, y });
-            setCoords({ z: map.getZoom(), x, y });
         },
         mouseout() {
             setHighlight(null);
         },
-        zoomend() {
-            setCoords(prev => ({ ...prev, z: map.getZoom() }));
-        }
     });
+
+    function handleClose() {
+        setSelected(null);
+    }
 
     return (
         <>
-            {highlight && <Pixel x={highlight.x} y={highlight.y} />}
+            {highlight && <Pixel x={highlight.x} y={highlight.y} opacity={0.1} />}
+            {selected && <Pixel x={selected.x} y={selected.y} />}
 
-
-            <Box
-                padding={2}
-                color={'ButtonText'}
-                bgcolor={"Window"}
-                borderRadius={10}
-            >
-                <Typography variant="body2" component="div">
-                    z:{coords.z} . x:{coords.x} . y:{coords.y}
-                </Typography>
-            </Box>
+            {(selected && isStatic) ? (
+                <Window close={handleClose}>
+                    <Stack spacing={2}>
+                        <Typography variant="h6" color="primary" align='center'>
+                            Pixel
+                        </Typography>
+                        <Divider sx={{ width: '100%' }} />
+                        <Stack direction="row" spacing={2} justifyContent="space-between">
+                            <Typography variant="body1">
+                                <strong>X:</strong> {selected.x}
+                            </Typography>
+                            <Typography variant="body1">
+                                <strong>Y:</strong> {selected.y}
+                            </Typography>
+                            <Typography variant="body1">
+                                <strong>Frame:</strong> {frame}
+                            </Typography>
+                        </Stack>
+                        <Typography variant="body1">
+                            <strong>Painted by:</strong> XXX #123123
+                        </Typography>
+                        <PaintButton />
+                    </Stack>
+                </Window >
+            ) : (
+                <PaintButton />
+            )
+            }
         </>
     );
 }
