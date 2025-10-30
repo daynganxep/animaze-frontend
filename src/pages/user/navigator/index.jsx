@@ -47,6 +47,7 @@ export default function Navigator() {
             dialog.close();
             const { z, x, y } = data;
             map.setView([y, x], z);
+            map.fire('click', { latlng: L.latLng(y, x) });
         },
     });
 
