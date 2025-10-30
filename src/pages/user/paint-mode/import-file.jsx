@@ -8,6 +8,10 @@ import {
     Tooltip,
     IconButton,
     Stack,
+    // Link,
+    Typography,
+    Box,
+    Button,
 } from '@mui/material';
 import FormDialog from '@/components/dialog/form-dialog';
 import { importPixelsSchema } from '@/validations/import-pixels-schema';
@@ -38,8 +42,13 @@ function ImportPixels() {
         control,
         watch,
         setValue,
+        reset,
         formState: { errors },
     } = form;
+
+    const x = watch("x");
+
+    console.log(x)
 
 
     const mutation = useMutation({
@@ -52,6 +61,7 @@ function ImportPixels() {
             }
             const results = await Promise.all(chunks.map(chunk => SectorService.paint({ pixels: chunk })));
             console.log({ results });
+            reset();
             return "sector-s-1";
         },
         onSuccess: (res) => {
@@ -88,7 +98,7 @@ function ImportPixels() {
     return (
         <FormDialog
             title="ui.import-pixels-title"
-            submitButtonText="common.create"
+            submitButtonText="ui.paint"
             form={form}
             mutation={mutation}
             dialog={dialog}
@@ -153,8 +163,27 @@ function ImportPixels() {
             <FileField
                 name="file"
                 control={control}
-                label={t("ui.file")}
+                label={t("ui.upload-file") + " *.json"}
             />
+
+            <Box sx={{ mt: 2, p: 2, borderRadius: 2, bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider', display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Box sx={{ flex: 1 }}>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>{t('ui.import-help-title') || 'Convert your artwork to Animaze JSON'}</Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                        {t('ui.import-help') || 'Use the converter to produce a JSON blueprint compatible with the uploader. The converter can export pixel positions and color names.'}
+                    </Typography>
+                </Box>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    href="https://wplacepaint.com/converter/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    sx={{ whiteSpace: 'nowrap' }}
+                >
+                    {t('ui.open-converter') || 'Open Converter'}
+                </Button>
+            </Box>
         </ FormDialog>
     );
 }

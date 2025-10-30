@@ -39,7 +39,11 @@
         "frame": "Frame",
         "start-x": "Start X",
         "start-y": "Start Y",
-        "import-pixels-title": "Paint pixels from imported file"
+        "import-pixels-title": "Paint pixels from imported file",
+        "upload-file": "Upload file",
+        "import-help-title": "Convert artwork to Animaze JSON",
+        "import-help": "Need a JSON blueprint? Use the converter to export pixel positions and color names compatible with Animaze.",
+        "open-converter": "Open Converter"
     },
     "api-code": {
         "app-f-1": "Error",

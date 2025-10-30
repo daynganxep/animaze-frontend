@@ -140,6 +140,63 @@ const theme = createTheme({
       },
     },
 
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          padding: 6,
+          borderRadius: 12,
+          color: white,
+          backgroundColor: alpha(black, 0.5),
+          '&.Mui-disabled': {
+            backgroundColor: alpha(black, 0.15),
+            color: alpha(white, 0.4),
+          },
+        },
+        select: {
+          padding: '10px 14px',
+          '&:focus': {
+            backgroundColor: alpha(black, 0.5),
+          },
+        },
+        icon: {
+          color: alpha(white, 0.8),
+        },
+      },
+    },
+
+    MuiMenu: {
+      styleOverrides: {
+        paper: {
+          backgroundColor: alpha(black, 0.8),
+          color: white,
+          borderRadius: 8,
+          border: `1px solid ${alpha(white, 0.06)}`,
+          backdropFilter: 'blur(6px)',
+          boxShadow: `0 8px 20px ${alpha(black, 0.6)}`,
+          padding: 2,
+        },
+      },
+    },
+
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          borderRadius: 6,
+          margin: '2px 6px',
+          padding: '8px 16px',
+          '&.Mui-selected': {
+            backgroundColor: alpha(white, 0.06),
+            '&:hover': {
+              backgroundColor: alpha(white, 0.08),
+            },
+          },
+          '&:hover': {
+            backgroundColor: alpha(white, 0.03),
+          },
+        },
+      },
+    },
+
     MuiToggleButton: {
       styleOverrides: {
         root: {

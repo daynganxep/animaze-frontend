@@ -38,7 +38,12 @@
         "import": "Nhập từ file",
         "frame": "Khung",
         "start-x": "X bắt đầu",
-        "start-y": "Y bắt đầu"
+        "start-y": "Y bắt đầu",
+        "import-pixels-title": "Nhập pixel từ file",
+        "upload-file": "Tải file lên",
+        "import-help-title": "Chuyển đổi artwork sang JSON Animaze",
+        "import-help": "Cần file JSON mẫu? Sử dụng công cụ chuyển đổi để xuất vị trí pixel và tên màu tương thích với Animaze.",
+        "open-converter": "Mở công cụ chuyển đổi"
     },
     "api-code": {
         "app-f-1": "Lỗi",
