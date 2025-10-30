@@ -1,9 +1,12 @@
 import { Avatar, Stack, Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 function PaintedAccount({ account }) {
+    const { t } = useTranslation();
+
     if (!account) {
         return <Typography variant="body1" align="start" justifyItems="center" lineHeight={"32px"}>
-            No one
+            {t("ui.no-one")}
         </Typography >
     }
     return (<Stack direction="row" spacing={1} alignItems={"center"}>

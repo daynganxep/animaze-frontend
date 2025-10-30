@@ -4,13 +4,15 @@ import {
     Stack,
     IconButton,
     Tooltip,
+    Slider,
+    Typography,
 } from '@mui/material';
 import { Plane } from 'lucide-react';
 import { useMap } from 'react-leaflet';
 import { useTranslation } from 'react-i18next';
 import useDialog from '@/hooks/use-dialog';
 import { useMutation } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { coordsSchema } from '@/validations/coords-chema';
 import { useEffect, useRef } from 'react';
@@ -63,61 +65,66 @@ export default function Navigator() {
                 </Tooltip>
             }
         >
-            <Stack direction={"row"} spacing={2}>
-                <TextField
-                    fullWidth
-                    label={t("ui.zoom")}
-                    name="z"
-                    error={!!errors.z}
-                    helperText={errors?.z?.message}
-                    required
-                    type="number"
-                    slotProps={{
-                        htmlInput: {
-                            type: "number",
-                            step: 0.25,
-                            min: MIN_ZOOM,
-                            max: MAX_ZOOM,
-                            placeholder: `(${MIN_ZOOM} - ${MAX_ZOOM})`,
-                        },
-                    }}
-                    {...register("z")}
-                />
-                <TextField
-                    fullWidth
-                    label={t("ui.pixel-x")}
-                    name="x"
-                    error={!!errors.x}
-                    helperText={errors?.x?.message}
-                    required
-                    type="number"
-                    slotProps={{
-                        htmlInput: {
-                            min: 0,
-                            max: WORLD_DIMENSION - 1,
-                            placeholder: `(${0} - ${WORLD_DIMENSION - 1})`,
+            <Stack direction={"column"} spacing={2}>
+                <Stack direction={"row"} spacing={2}>
+                    <TextField
+                        fullWidth
+                        label={t("ui.pixel-x")}
+                        name="x"
+                        error={!!errors.x}
+                        helperText={errors?.x?.message}
+                        required
+                        type="number"
+                        slotProps={{
+                            htmlInput: {
+                                min: 0,
+                                max: WORLD_DIMENSION - 1,
+                                placeholder: `(${0} - ${WORLD_DIMENSION - 1})`,
 
-                        },
-                    }}
-                    {...register("x")}
-                />
-                <TextField
-                    fullWidth
-                    label={t("ui.pixel-y")}
-                    name="y"
-                    error={!!errors.y}
-                    helperText={errors?.y?.message}
-                    required
-                    type="number"
-                    slotProps={{
-                        htmlInput: {
-                            min: 0,
-                            max: WORLD_DIMENSION - 1,
-                            placeholder: `(${0} - ${WORLD_DIMENSION - 1})`,
-                        },
-                    }}
-                    {...register("y")}
-                />
+                            },
+                        }}
+                        {...register("x")}
+                    />
+                    <TextField
+                        fullWidth
+                        label={t("ui.pixel-y")}
+                        name="y"
+                        error={!!errors.y}
+                        helperText={errors?.y?.message}
+                        required
+                        type="number"
+                        slotProps={{
+                            htmlInput: {
+                                min: 0,
+                                max: WORLD_DIMENSION - 1,
+                                placeholder: `(${0} - ${WORLD_DIMENSION - 1})`,
+                            },
+                        }}
+                        {...register("y")}
+                    />
+                </Stack>
+                <Stack >
+                    <Typography variant="body2">{t('ui.zoom')}</Typography>
+                    <Controller
+                        name="z"
+                        control={form.control}
+                        render={({ field }) => (
+                            <Slider
+                                {...field}
+                                value={typeof field.value === 'number' ? field.value : 0}
+                                onChange={(_, value) => field.onChange(value)}
+                                min={MIN_ZOOM}
+                                max={MAX_ZOOM}
+                                step={0.25}
+                                valueLabelDisplay="auto"
+                                marks={[{ value: MIN_ZOOM, label: String(MIN_ZOOM) }, { value: MAX_ZOOM, label: String(MAX_ZOOM) }]}
+                            />
+                        )}
+                    />
+                    {errors.z && (
+                        <Typography variant="caption" color="error">{errors.z.message}</Typography>
+                    )}
+                </Stack>
             </Stack>
         </ FormDialog >
     );

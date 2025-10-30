@@ -5,6 +5,11 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import en from "@/locales/en/translation.json";
 import vi from "@/locales/vi/translation.json";
 
+export const languages = [
+    { code: 'en', name: 'English' },
+    { code: 'vi', name: 'Tiếng Việt' }
+];
+
 i18n
     .use(LanguageDetector)
     .use(initReactI18next)
@@ -13,7 +18,7 @@ i18n
             en: { translation: en },
             vi: { translation: vi },
         },
-        fallbackLng: "en",
+        fallbackLng: "vi",
         interpolation: {
             escapeValue: false,
         },

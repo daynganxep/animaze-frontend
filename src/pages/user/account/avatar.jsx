@@ -8,9 +8,10 @@ import useTippy from '@/hooks/use-tippy';
 import { authActions } from '@/redux/slices/auth.slice';
 import { Copy, LogOut } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { languages } from '@/configs/i18n.config';
 
 export default function AccountButton({ account }) {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const tippy = useTippy();
 
@@ -33,6 +34,8 @@ export default function AccountButton({ account }) {
             setTimeout(() => setCopied(false), 2000);
         }
     };
+
+
 
     return <Tippy
         onClickOutside={tippy.close}
@@ -84,6 +87,19 @@ export default function AccountButton({ account }) {
                             {t("ui.provider")}: {account?.provider}
                         </Typography>
                     </Stack>
+                </Stack>
+                <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
+                    {languages.map((lang) => (
+                        <Button
+                            key={lang.code}
+                            onClick={() => i18n.changeLanguage(lang.code)}
+                            variant={i18n.language.startsWith(lang.code) ? 'contained' : 'outlined'}
+                            size="small"
+                            sx={{ flexGrow: 1 }}
+                        >
+                            {lang.name}
+                        </Button>
+                    ))}
                 </Stack>
                 <Button
                     onClick={handleLogout}

@@ -3,9 +3,11 @@ import { memo } from "react";
 import { white } from "@/app/app/theme";
 import { COLOR_PALETTE } from "@/configs/palette.config";
 import { PAINT_TYPE } from "@/configs/const.config";
+import { useTranslation } from "react-i18next";
 
 export default memo(function ColorPalette({ selectedColor, setSelectedColor, paintType }) {
     const isDisabled = paintType === PAINT_TYPE.ERASER;
+    const { t } = useTranslation();
 
     return (
         <Box
@@ -22,7 +24,7 @@ export default memo(function ColorPalette({ selectedColor, setSelectedColor, pai
             }}
         >
             {COLOR_PALETTE.map((item, index) => (
-                <Tooltip key={index} title={`${item.name} : ${index}`} arrow placement="top">
+                <Tooltip key={index} title={`${t("palette." + item.name)} : ${index}`} arrow placement="top">
                     <Box
                         role="button"
                         tabIndex={0}

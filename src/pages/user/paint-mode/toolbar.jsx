@@ -78,6 +78,7 @@ export default memo(function Toolbar({ paintingPixels, paintType, togglePaintTyp
                 size="large"
                 variant="outlined"
                 endIcon={<Brush />}
+                sx={{ fontWeight: "bold" }}
             >
                 {t("ui.paint")} : {paintingPixels.size}
             </Button>
