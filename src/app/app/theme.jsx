@@ -4,6 +4,9 @@ export const black = 'rgba(0, 0, 0, 1)';
 export const white = 'rgba(255, 255, 255, 1)';
 
 const theme = createTheme({
+  typography: {
+    fontFamily: '"Noto Sans Mono", monospace',
+  },
   palette: {
     mode: 'dark',
     primary: {
@@ -23,6 +26,7 @@ const theme = createTheme({
       primary: white,
       secondary: alpha(white, 0.7),
       disabled: alpha(white, 0.5),
+      black: black
     },
   },
 

@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import { white } from '@/app/app/theme';
 import { WORLD_DIMENSION } from '@/configs/env.config';
 import { MAX_ZOOM, MIN_ZOOM } from '@/configs/const.config';
+import TrackingPositon from './tracker/positon';
 
 const CustomSimpleCRS = L.extend({}, L.CRS.Simple, {
     transformation: new L.Transformation(1, 0, 1, 0),
@@ -39,10 +40,11 @@ export default function PixelMap() {
                 zoomDelta={0.25}
                 zoomControl={false}
             >
-                <Stack direction="column" position="absolute" top={0} left={0} padding={2} spacing={2} zIndex={1001} >
+                <Stack direction={"column"} justifyContent={"start"} alignItems={"start"} position="absolute" top={0} left={0} padding={2} spacing={2} zIndex={1001} >
+                    <TrackingPositon />
                     <ZoomControl />
                 </Stack>
-                <Stack direction="column" position="absolute" top={0} right={0} padding={2} spacing={2} zIndex={1001} >
+                <Stack direction="column" alignItems={"end"} position="absolute" top={0} right={0} padding={2} spacing={2} zIndex={1001} >
                     <Account />
                     <Navigator />
                     <ViewControl />
