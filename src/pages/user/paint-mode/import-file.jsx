@@ -8,7 +8,6 @@ import {
     Tooltip,
     IconButton,
     Stack,
-    // Link,
     Typography,
     Box,
     Button,
@@ -23,8 +22,6 @@ import FileField from '@/components/form/file-field';
 import { memo, useEffect, useState } from 'react';
 import { processBlueprint } from '@/tools/map-file';
 import toast from '@/hooks/toast';
-
-
 
 function ImportPixels() {
     const { t } = useTranslation();
@@ -45,11 +42,6 @@ function ImportPixels() {
         reset,
         formState: { errors },
     } = form;
-
-    const x = watch("x");
-
-    console.log(x)
-
 
     const mutation = useMutation({
         mutationFn: async ({ x, y, f }) => {
