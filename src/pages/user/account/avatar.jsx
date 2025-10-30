@@ -16,9 +16,12 @@ export default function AccountButton({ account }) {
     const tippy = useTippy();
 
     const avatarRef = useRef(null);
+    const xRef = useRef(null);
+
 
     useEffect(() => {
         if (avatarRef.current) L.DomEvent.disableClickPropagation(avatarRef.current);
+        if (xRef.current) L.DomEvent.disableClickPropagation(xRef.current);
     }, []);
 
     function handleLogout() {

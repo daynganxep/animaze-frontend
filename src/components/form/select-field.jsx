@@ -36,7 +36,7 @@ const SelectField = ({
                         labelId={`${name}-label`}
                         label={label}
                         multiple={multiple}
-                        value={multiple ? field.value || [] : field.value || ""}
+                        value={multiple ? field.value || [] : field.value ?? ""}
                         onChange={(e) => field.onChange(e.target.value)}
                         {...props}
                     >

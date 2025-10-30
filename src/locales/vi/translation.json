@@ -34,7 +34,11 @@
         "eraser": "Tẩy",
         "bone": "Xương",
         "clear": "Xóa sạch",
-        "no-one": "Không có ai"
+        "no-one": "Không có ai",
+        "import": "Nhập từ file",
+        "frame": "Khung",
+        "start-x": "X bắt đầu",
+        "start-y": "Y bắt đầu"
     },
     "api-code": {
         "app-f-1": "Lỗi",

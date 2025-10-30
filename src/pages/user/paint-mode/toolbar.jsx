@@ -9,6 +9,7 @@ import toast from "@/hooks/toast";
 import { useDispatch } from "react-redux";
 import { uiActions } from "@/redux/slices/ui.slice";
 import { useTranslation } from "react-i18next";
+import ImportFile from "./import-file";
 
 export default memo(function Toolbar({ paintingPixels, paintType, togglePaintType, bone, toggleBone, handleClear }) {
     const { t } = useTranslation();
@@ -70,6 +71,7 @@ export default memo(function Toolbar({ paintingPixels, paintType, togglePaintTyp
                         <BrushCleaning />
                     </IconButton>
                 </Tooltip>
+                <ImportFile />
             </Stack>
             <Button
                 loading={isPending}

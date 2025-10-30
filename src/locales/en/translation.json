@@ -34,7 +34,12 @@
         "eraser": "Eraser",
         "bone": "Bone",
         "clear": "Clear",
-        "no-one": "No one"
+        "no-one": "No one",
+        "import": "Import",
+        "frame": "Frame",
+        "start-x": "Start X",
+        "start-y": "Start Y",
+        "import-pixels-title": "Paint pixels from imported file"
     },
     "api-code": {
         "app-f-1": "Error",
