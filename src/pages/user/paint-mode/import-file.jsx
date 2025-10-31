@@ -22,10 +22,15 @@ import FileField from '@/components/form/file-field';
 import { memo, useEffect, useState } from 'react';
 import { processBlueprint } from '@/tools/map-file';
 import toast from '@/hooks/toast';
+import { useMap } from 'react-leaflet';
+import { useDispatch } from 'react-redux';
+import { animationActions } from '@/redux/slices/animation.slice';
 
 function ImportPixels() {
     const { t } = useTranslation();
     const dialog = useDialog();
+    const map = useMap();
+    const dispatch = useDispatch();
 
     const form = useForm({
         resolver: joiResolver(importPixelsSchema),
@@ -54,11 +59,16 @@ function ImportPixels() {
             const results = await Promise.all(chunks.map(chunk => SectorService.paint({ pixels: chunk })));
             console.log({ results });
             reset();
-            return "sector-s-1";
+            return { messageCode: "sector-s-1", x, y, f };
         },
-        onSuccess: (res) => {
+        onSuccess: ({ messageCode, x, y, f }) => {
             dialog.close();
-            toast.success(res.code);
+            toast.success(messageCode);
+            dispatch(animationActions.setStates({ field: "frame", value: f }));
+            map.flyTo([y, x], map.getZoom(), {
+                duration: 2,
+                easeLinearity: 0.25,
+            });
         },
     });
 

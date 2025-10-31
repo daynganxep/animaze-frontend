@@ -46,7 +46,10 @@ export default function Navigator() {
         mutationFn: (data) => {
             dialog.close();
             const { z, x, y } = data;
-            map.setView([y, x], z);
+            map.flyTo([y, x], z, {
+                duration: 2,
+                easeLinearity: 0.25,
+            });
             map.fire('click', { latlng: L.latLng(y, x) });
         },
     });
