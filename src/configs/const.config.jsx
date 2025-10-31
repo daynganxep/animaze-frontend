@@ -18,9 +18,11 @@ export const ANIMATION_MODE = {
     STATIC: "STATIC"
 }
 
-export const MIN_ZOOM = 0;
+export const MIN_ZOOM = -4;
 
 export const MAX_ZOOM = 9;
+
+export const MIN_VISIBLE_ZOOM = 0;
 
 export const PAINT_TYPE = {
     PAINT: "PAINT",

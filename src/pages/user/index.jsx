@@ -4,22 +4,19 @@ import L from 'leaflet';
 import Account from './account';
 import Navigator from './navigator';
 import Sectors from './sectors';
-import Tracker from './tracker/index.jsx';
 import ZoomControl from './zoom-control';
 import ViewControl from './view-control';
-import PaintMode from './paint-mode';
-import { useSelector } from 'react-redux';
 import { white } from '@/app/app/theme';
 import { WORLD_DIMENSION } from '@/configs/env.config';
 import { MAX_ZOOM, MIN_ZOOM } from '@/configs/const.config';
 import TrackingPositon from './zoom-control/positon';
+import PaintSide from './paint-side';
 
 const CustomSimpleCRS = L.extend({}, L.CRS.Simple, {
     transformation: new L.Transformation(1, 0, 1, 0),
 });
 
 export default function PixelMap() {
-    const { paintMode } = useSelector(s => s.ui);
 
     return (
         <Stack position="relative" width="100vw" height="100vh"
@@ -50,10 +47,7 @@ export default function PixelMap() {
                     <ViewControl />
                 </Stack>
                 <Stack direction="row" position="absolute" bottom={0} padding={2} zIndex={1001} width="100%" justifyContent="center">
-                    {paintMode ?
-                        <PaintMode /> :
-                        <Tracker />
-                    }
+                    <PaintSide></PaintSide>
                 </Stack>
                 <Sectors />
             </MapContainer>
