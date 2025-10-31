@@ -21,7 +21,6 @@ export default function PaintMode() {
     const { frame } = useSelector(s => s.animation);
     const [isSpaceDown, setIsSpaceDown] = useState(false);
 
-
     usePaintCursor(paintType);
 
     useEffect(() => {

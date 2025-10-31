@@ -43,7 +43,10 @@
         "upload-file": "Tải file lên",
         "import-help-title": "Chuyển đổi artwork sang JSON Animaze",
         "import-help": "Cần file JSON mẫu? Sử dụng công cụ chuyển đổi để xuất vị trí pixel và tên màu tương thích với Animaze.",
-        "open-converter": "Mở công cụ chuyển đổi"
+        "open-converter": "Mở công cụ chuyển đổi",
+        "shared-link": "Chia sẻ liên kết",
+        "link-copied": "Đã sao chép liên kết",
+        "copy-failed": "Sao chép liên kết thất bại"
     },
     "api-code": {
         "app-f-1": "Lỗi",

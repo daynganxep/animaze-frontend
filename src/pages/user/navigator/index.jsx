@@ -17,14 +17,15 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import { coordsSchema } from '@/validations/coords-chema';
 import { useEffect, useRef } from 'react';
 import L from "leaflet";
-import { MAX_ZOOM, MIN_ZOOM } from '@/configs/const.config';
+import { flyOptions, MAX_ZOOM, MIN_VISIBLE_ZOOM } from '@/configs/const.config';
 import { WORLD_DIMENSION } from '@/configs/env.config';
+import useInitNavigate from '@/hooks/use-init-navigate';
 
 export default function Navigator() {
     const map = useMap();
     const { t } = useTranslation();
     const dialog = useDialog();
-
+    useInitNavigate();
 
     const moveRef = useRef(null);
 
@@ -46,10 +47,7 @@ export default function Navigator() {
         mutationFn: (data) => {
             dialog.close();
             const { z, x, y } = data;
-            map.flyTo([y, x], z, {
-                duration: 2,
-                easeLinearity: 0.25,
-            });
+            map.flyTo([y, x], z, flyOptions);
             map.fire('click', { latlng: L.latLng(y, x) });
         },
     });
@@ -117,11 +115,11 @@ export default function Navigator() {
                                 {...field}
                                 value={typeof field.value === 'number' ? field.value : 0}
                                 onChange={(_, value) => field.onChange(value)}
-                                min={MIN_ZOOM}
+                                min={MIN_VISIBLE_ZOOM}
                                 max={MAX_ZOOM}
                                 step={0.25}
                                 valueLabelDisplay="auto"
-                                marks={[{ value: MIN_ZOOM, label: String(MIN_ZOOM) }, { value: MAX_ZOOM, label: String(MAX_ZOOM) }]}
+                                marks={[{ value: MIN_VISIBLE_ZOOM, label: String(MIN_VISIBLE_ZOOM) }, { value: MAX_ZOOM, label: String(MAX_ZOOM) }]}
                             />
                         )}
                     />

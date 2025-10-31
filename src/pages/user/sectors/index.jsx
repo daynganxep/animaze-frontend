@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import L from 'leaflet';
 import SectorService from '@/services/sector.service';
 import { SectorDataParser } from '@/tools/data.tool';
-import { ANIMATION_MODE } from '@/configs/const.config';
+import { ANIMATION_MODE, MIN_VISIBLE_ZOOM } from '@/configs/const.config';
 import { useDispatch } from 'react-redux';
 import { animationActions } from '@/redux/slices/animation.slice';
 import { FRAMES_COUNT, SECTOR_SIZE, WORLD_DIMENSION } from '@/configs/env.config';
@@ -29,6 +29,12 @@ export default function Sectors() {
     }, [mode, speed, frame, dispatch]);
 
     const updateVisibleSectors = useCallback(() => {
+        if (map.getZoom() < MIN_VISIBLE_ZOOM) {
+            layerRef.clearLayers();
+            setVisibleSectors(new Set());
+            return;
+        }
+
         const bounds = map.getBounds();
         const west = Math.max(0, bounds.getWest());
         const east = Math.min(WORLD_DIMENSION, bounds.getEast());
@@ -49,7 +55,7 @@ export default function Sectors() {
             }
         }
         setVisibleSectors(newVisible);
-    }, [map]);
+    }, [map, layerRef]);
 
     useMapEvents({
         moveend: updateVisibleSectors,

@@ -5,6 +5,7 @@ import {
     DialogContent,
     useTheme,
 } from "@mui/material";
+import Window from "../ui/window";
 
 function GeneralDialog({
     title,
@@ -30,22 +31,23 @@ function GeneralDialog({
                     },
                 }}
             >
-                {title &&
-                    <DialogTitle sx={{ color: theme.palette.text.primary, mb: 3 }}>
-                        {t(title)}
-                    </DialogTitle>
-                }
-
-                <DialogContent
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 3,
-                        overflow: "visible",
-                    }}
-                >
-                    {children}
-                </DialogContent>
+                <Window close={dialog.close}>
+                    {title &&
+                        <DialogTitle sx={{ color: theme.palette.text.primary, mb: 3 }}>
+                            {t(title)}
+                        </DialogTitle>
+                    }
+                    <DialogContent
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 3,
+                            overflow: "visible",
+                        }}
+                    >
+                        {children}
+                    </DialogContent>
+                </Window>
             </Dialog >
         </>
     );

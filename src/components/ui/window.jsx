@@ -15,7 +15,7 @@ function Window({ close, children, sx = {} }) {
 
     return (<Box ref={ref} padding={2} borderRadius={6} sx={{
         backdropFilter: 'blur(5px)',
-        bgcolor: "background.paper",
+        bgcolor: "background.default",
         position: "relative",
         minWidth: 300,
         minHeight: 100,
