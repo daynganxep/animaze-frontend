@@ -15,9 +15,7 @@ export default function GoogleLoginOauth2({ closeDialog }) {
             return;
         }
         toast.success(res.messageCode);
-        dispatch(
-            authActions.setStates({ field: 'tokens', value: res.data })
-        );
+        dispatch(authActions.setStates({ field: 'tokens', value: res.data }));
         closeDialog();
     }
 
@@ -26,21 +24,18 @@ export default function GoogleLoginOauth2({ closeDialog }) {
         closeDialog();
     }
 
-
     return (
         <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
             <GoogleLogin
                 onSuccess={handleSuccess}
                 onError={handleError}
-                useOneTap
                 theme="filled_black"
                 size="large"
                 shape="pill"
                 text="continue_with"
                 logo_alignment="left"
-                width="100%"
-                cancel_on_tap_outside
                 ux_mode="popup"
+                width="100%"
             />
         </GoogleOAuthProvider>
     );

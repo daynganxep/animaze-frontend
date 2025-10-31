@@ -1,6 +1,6 @@
 import GeneralDialog from '@/components/dialog/general-dialog';
 import { Box, IconButton, Tooltip } from '@mui/material';
-import GoogleLoginOauth2 from '@/components/ui/google-login-oauth2';
+import GoogleLoginOauth2 from '@/components/auth/google-login-oauth2';
 import { useSelector } from 'react-redux';
 import { useEffect, useRef, } from 'react';
 import L from "leaflet";
