@@ -7,7 +7,16 @@ import { INTERVAL_REFRESH_TOKEN } from "@/configs/env.config";
 
 const useInitialApp = () => {
   const dispatch = useDispatch();
-  const { refreshToken, accessToken } = useSelector((state) => state.auth.tokens);
+  const { refreshToken } = useSelector((state) => state.auth.tokens);
+
+  const fetchAccount = useCallback(async () => {
+    const [res, err] = await AccountService.getMyAccount();
+    if (err) {
+      dispatch(authActions.setStates({ field: "account", value: null }));
+      return;
+    }
+    dispatch(authActions.setStates({ field: "account", value: res.data }));
+  }, [dispatch]);
 
   const handleRefreshToken = useCallback(async () => {
     const [res, error] = await AuthService.refreshToken();
@@ -19,17 +28,11 @@ const useInitialApp = () => {
     const { accessToken } = res.data;
     dispatch(authActions.setStates({ field: "tokens.accessToken", value: accessToken }));
     dispatch(authActions.setStates({ field: "logged", value: true }));
-    return true;
-  }, [dispatch]);
 
-  const fetchAccount = useCallback(async () => {
-    const [res, err] = await AccountService.getMyAccount();
-    if (err) {
-      dispatch(authActions.setStates({ field: "account", value: null }));
-      return;
-    }
-    dispatch(authActions.setStates({ field: "account", value: res.data }));
-  }, [dispatch]);
+    await fetchAccount();
+
+    return true;
+  }, [dispatch, fetchAccount]);
 
   useEffect(() => {
     let intervalId;
@@ -48,10 +51,6 @@ const useInitialApp = () => {
 
     return () => { if (intervalId) clearInterval(intervalId) };
   }, [refreshToken, handleRefreshToken, fetchAccount, dispatch]);
-
-  useEffect(() => {
-    if (accessToken) fetchAccount();
-  }, [accessToken, fetchAccount]);
 };
 
 export default useInitialApp;

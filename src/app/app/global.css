@@ -1,5 +1,4 @@
-/* @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Monoton&family=Plaster&family=Tiny5&family=Zen+Tokyo+Zoo&display=swap"); */
+/* Font is preloaded in index.html (Google Fonts) to improve load performance. */
 
 /* {
     font-family: "Noto Sans Mono", monospace;
@@ -55,12 +54,22 @@ body {
 
 body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    /* Primary app font: Noto Sans Mono (fallbacks for safety) */
+    font-family: "Noto Sans Mono", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
         "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 * {
     box-sizing: border-box;
+    font-family: "Noto Sans Mono", monospace;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.font-tiny5 {
+    font-family: "Tiny5", sans-serif !important;
 }
 
 /* Modern high contrast support - replaces deprecated -ms-high-contrast */
@@ -75,4 +84,12 @@ body {
     image-rendering: -moz-crisp-edges; /* Firefox */
     image-rendering: -webkit-crisp-edges; /* Webkit (Chrome, Safari) */
     image-rendering: pixelated; /* Standard */
+}
+
+.leaflet-container {
+    pointer-events: auto;
+}
+
+.ui-overlay {
+    pointer-events: auto;
 }

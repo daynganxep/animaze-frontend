@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import toast from '@/hooks/toast';
 import { GOOGLE_CLIENT_ID } from '@/configs/env.config';
 
-export default function GoogleLoginOauth2() {
+export default function GoogleLoginOauth2({ closeDialog }) {
     const dispatch = useDispatch();
 
     async function handleSuccess(credentialResponse) {
@@ -14,11 +14,16 @@ export default function GoogleLoginOauth2() {
             toast.error(err.messageCode);
             return;
         }
-        console.log({ res })
         toast.success(res.messageCode);
         dispatch(
             authActions.setStates({ field: 'tokens', value: res.data })
-        )
+        );
+        closeDialog();
+    }
+
+    function handleError() {
+        toast.error('Login Failed');
+        closeDialog();
     }
 
 
@@ -26,16 +31,16 @@ export default function GoogleLoginOauth2() {
         <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
             <GoogleLogin
                 onSuccess={handleSuccess}
-                onError={() => toast.error('Login Failed')}
+                onError={handleError}
                 useOneTap
-                theme="outline"
+                theme="filled_black"
                 size="large"
                 shape="pill"
-                text="signin_with"
+                text="continue_with"
                 logo_alignment="left"
                 width="100%"
                 cancel_on_tap_outside
-                ux_mode='popup'
+                ux_mode="popup"
             />
         </GoogleOAuthProvider>
     );

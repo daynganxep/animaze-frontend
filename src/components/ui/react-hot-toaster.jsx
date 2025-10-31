@@ -7,7 +7,7 @@ function ReactHotToaster() {
 
     return (
         <Toaster
-            position="bottom-right"
+            position="top-center"
             gutter={8}
             containerStyle={{
                 position: 'fixed',
@@ -16,9 +16,9 @@ function ReactHotToaster() {
             toastOptions={{
                 duration: 3000,
                 style: {
-                    background: theme.palette.background.default,
+                    background: theme.palette.background.paper,
                     color: theme.palette.text.primary,
-                    padding: theme.spacing(1.5, 2),
+                    padding: theme.spacing(1, 1),
                     fontSize: theme.typography.body2.fontSize,
                     display: 'flex',
                     alignItems: 'center',

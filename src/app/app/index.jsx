@@ -12,7 +12,7 @@ function App() {
   useInitialApp();
 
   return (
-    <ThemeProvider theme={theme} defaultMode="dark">
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <HelmetProvider>
         <Router />

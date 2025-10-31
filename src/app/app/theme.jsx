@@ -1,9 +1,12 @@
 import { createTheme, alpha } from '@mui/material/styles';
 
-const black = 'rgba(0, 0, 0, 1)';
-const white = '#ffffffff';
+export const black = 'rgba(0, 0, 0, 1)';
+export const white = 'rgba(255, 255, 255, 1)';
 
 const theme = createTheme({
+  typography: {
+    fontFamily: '"Noto Sans Mono", monospace',
+  },
   palette: {
     mode: 'dark',
     primary: {
@@ -14,13 +17,16 @@ const theme = createTheme({
       main: alpha(white, 0.8),
     },
     background: {
+      black: black,
       default: alpha(black, 0.6),
       paper: alpha(black, 0.75),
+      light: alpha(white, 0.2),
     },
     text: {
       primary: white,
       secondary: alpha(white, 0.7),
       disabled: alpha(white, 0.5),
+      black: black
     },
   },
 
@@ -32,15 +38,21 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          textTransform: 'none',
-          fontWeight: 500,
-          color: white,
-          backgroundColor: alpha(black, 0.6),
-          border: `1px solid ${alpha(white, 0.3)}`,
-          transition: 'all 0.2s ease',
+          borderRadius: 10,
+          color: alpha(white, 1),
+          backgroundColor: alpha(black, 1),
+          transition: 'all 0.25s',
           '&:hover': {
-            backgroundColor: alpha(white, 0.15),
-            borderColor: alpha(white, 0.5),
+            backgroundColor: alpha(black, 0.8),
+          },
+          '&.Mui-selected': {
+            backgroundColor: alpha(black, 1),
+            '&:hover': {
+              backgroundColor: alpha(black, 1),
+            },
+          },
+          '&.Mui-disabled': {
+            backgroundColor: alpha(black, 0.1),
           },
         },
       },
@@ -55,6 +67,9 @@ const theme = createTheme({
           '&:hover': {
             backgroundColor: alpha(black, 1),
           },
+          '&.active': {
+            backgroundColor: alpha(black, 1),
+          },
         },
       },
     },
@@ -62,11 +77,35 @@ const theme = createTheme({
     MuiDialog: {
       styleOverrides: {
         paper: {
-          borderRadius: 0,
-          backgroundColor: alpha(black, 0.5),
-          backdropFilter: 'blur(10px)',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+          borderRadius: 4,
+          backdropFilter: 'blur(5px)',
         },
+      },
+    },
+
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          backgroundColor: alpha(black, 0.75),
+          backdropFilter: 'blur(6px)',
+          color: white,
+          fontSize: '0.75rem',
+          padding: '4px 12px',
+          borderRadius: 8,
+          boxShadow: `0 4px 6px ${alpha(black, 0.2)}`,
+          border: `1px solid ${alpha(white, 0.1)}`,
+        },
+        arrow: {
+          color: alpha(black, 0.75),
+          '&::before': {
+            border: `1px solid ${alpha(white, 0.1)}`,
+          },
+        },
+      },
+      defaultProps: {
+        arrow: true,
+        enterDelay: 400,
+        leaveDelay: 200,
       },
     },
 
@@ -101,26 +140,84 @@ const theme = createTheme({
       },
     },
 
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          padding: 6,
+          borderRadius: 12,
+          color: white,
+          backgroundColor: alpha(black, 0.5),
+          '&.Mui-disabled': {
+            backgroundColor: alpha(black, 0.15),
+            color: alpha(white, 0.4),
+          },
+        },
+        select: {
+          padding: '10px 14px',
+          '&:focus': {
+            backgroundColor: alpha(black, 0.5),
+          },
+        },
+        icon: {
+          color: alpha(white, 0.8),
+        },
+      },
+    },
+
+    MuiMenu: {
+      styleOverrides: {
+        paper: {
+          backgroundColor: alpha(black, 0.8),
+          color: white,
+          borderRadius: 8,
+          border: `1px solid ${alpha(white, 0.06)}`,
+          backdropFilter: 'blur(6px)',
+          boxShadow: `0 8px 20px ${alpha(black, 0.6)}`,
+          padding: 2,
+        },
+      },
+    },
+
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          borderRadius: 6,
+          margin: '2px 6px',
+          padding: '8px 16px',
+          '&.Mui-selected': {
+            backgroundColor: alpha(white, 0.06),
+            '&:hover': {
+              backgroundColor: alpha(white, 0.08),
+            },
+          },
+          '&:hover': {
+            backgroundColor: alpha(white, 0.03),
+          },
+        },
+      },
+    },
+
     MuiToggleButton: {
       styleOverrides: {
         root: {
           borderRadius: 50,
-          color: white,
-          backgroundColor: alpha(black, 0.5),
-          transition: 'all 0.2s ease',
+          color: alpha(white, 1),
+          backgroundColor: alpha(black, 0.1),
+          transition: 'all 0.25s',
           '&:hover': {
-            backgroundColor: alpha(black, 0.8),
+            backgroundColor: alpha(black, 0.5),
           },
           '&.Mui-selected': {
             backgroundColor: alpha(black, 1),
-            color: white,
             '&:hover': {
-              backgroundColor: alpha(black, 0.8),
+              backgroundColor: alpha(black, 1),
             },
           },
+          '&.Mui-disabled': {
+            backgroundColor: alpha(black, 0.1),
+          },
           '&.Mui-selected.Mui-disabled': {
-            color: alpha(white, 0.4),
-            backgroundColor: alpha(black, 0.2),
+            backgroundColor: alpha(black, 1),
           },
         },
       },
