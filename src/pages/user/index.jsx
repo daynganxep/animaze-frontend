@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 import { white } from '@/app/app/theme';
 import { WORLD_DIMENSION } from '@/configs/env.config';
 import { MAX_ZOOM, MIN_ZOOM } from '@/configs/const.config';
-import TrackingPositon from './tracker/positon';
+import TrackingPositon from './zoom-control/positon';
 
 const CustomSimpleCRS = L.extend({}, L.CRS.Simple, {
     transformation: new L.Transformation(1, 0, 1, 0),

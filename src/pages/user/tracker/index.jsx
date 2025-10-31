@@ -6,13 +6,17 @@ import { ANIMATION_MODE } from '@/configs/const.config';
 import toast from '@/hooks/toast';
 import { useSectorsCache } from '@/hooks/use-sectors-cache';
 import AccountService from '@/services/account.service';
-import { Typography, Stack, Divider } from '@mui/material';
+import { Typography, Stack, Divider, Tooltip, IconButton } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useMapEvents } from 'react-leaflet';
+import { useMap, useMapEvents } from 'react-leaflet';
 import { useSelector } from 'react-redux';
 import PaintedAccount from './painted-account';
 import { useTranslation } from 'react-i18next';
+import { Share2 } from 'lucide-react';
 import { NULL_COLOR_INDEX } from '@/tools/data.tool';
+import { CLIENT_URL } from '@/configs/env.config';
+import { useDispatch } from 'react-redux';
+import { mapActions } from '@/redux/slices/map.slice';
 
 function Tracker() {
     const { t } = useTranslation();
@@ -22,6 +26,8 @@ function Tracker() {
     const [selectedAccount, setSelectedAccount] = useState(null)
     const isStatic = mode === ANIMATION_MODE.STATIC;
     const sectorsCache = useSectorsCache();
+    const map = useMap();
+    const disapatch = useDispatch();
 
     useMapEvents({
         click(e) {
@@ -30,6 +36,7 @@ function Tracker() {
             const pixel = sectorsCache.getPixel(frame, x, y);
             setSelected({ x, y, pixel });
             getPixelAccount(pixel?.publicId);
+            disapatch(mapActions.set({ x, y, z: map.getZoom(), f: frame }));
         },
         mousemove(e) {
             const x = Math.floor(e.latlng.lng);
@@ -77,6 +84,16 @@ function Tracker() {
         return ` - ${t("palette." + colorName)} (${colorIndex})`;
     }
 
+    async function copyLink() {
+        try {
+            const link = `${CLIENT_URL}/?x=${selected.x}&y=${selected.y}&z=${map.getZoom()}&f=${frame}`;
+            await navigator.clipboard.writeText(link);
+            toast.success(t("ui.link-copied"), false);
+        } catch (err) {
+            toast.error(err?.message || t('ui.copy-failed'), false);
+        }
+    }
+
     return (
         <>
             {highlight && <Pixel x={highlight.x} y={highlight.y} c={white} opacity={0.1} b={true} />}
@@ -92,7 +109,14 @@ function Tracker() {
                         <Typography color="text" fontSize={"large"} fontWeight="bold" variant="body1">
                             x: {selected.x}, y: {selected.y}, frame: {frame}
                         </Typography>
-                        <PaintedAccount account={selectedAccount} />
+                        <Stack direction={"row"}>
+                            <PaintedAccount account={selectedAccount} />
+                            <Tooltip title={t('ui.shared-link')} placement="top">
+                                <IconButton onClick={copyLink} size="small" color="primary">
+                                    <Share2 />
+                                </IconButton>
+                            </Tooltip>
+                        </Stack>
                         <PaintButton sx={{ maxWidth: "500px" }} />
                     </Stack>
                 </Window >

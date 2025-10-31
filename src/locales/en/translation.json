@@ -43,7 +43,10 @@
         "upload-file": "Upload file",
         "import-help-title": "Convert artwork to Animaze JSON",
         "import-help": "Need a JSON blueprint? Use the converter to export pixel positions and color names compatible with Animaze.",
-        "open-converter": "Open Converter"
+        "open-converter": "Open Converter",
+        "shared-link": "Share Link",
+        "link-copied": "Link copied to clipboard",
+        "copy-failed": "Failed to copy link"
     },
     "api-code": {
         "app-f-1": "Error",

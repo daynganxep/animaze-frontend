@@ -25,6 +25,7 @@ import toast from '@/hooks/toast';
 import { useMap } from 'react-leaflet';
 import { useDispatch } from 'react-redux';
 import { animationActions } from '@/redux/slices/animation.slice';
+import { flyOptions } from '@/configs/const.config';
 
 function ImportPixels() {
     const { t } = useTranslation();
@@ -65,10 +66,7 @@ function ImportPixels() {
             dialog.close();
             toast.success(messageCode);
             dispatch(animationActions.setStates({ field: "frame", value: f }));
-            map.flyTo([y, x], map.getZoom(), {
-                duration: 2,
-                easeLinearity: 0.25,
-            });
+            map.flyTo([y, x], map.getZoom(), flyOptions);
         },
     });
 

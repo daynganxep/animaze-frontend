@@ -26,3 +26,8 @@ export const PAINT_TYPE = {
     PAINT: "PAINT",
     ERASER: "ERASER"
 }
+
+export const flyOptions = {
+    duration: 2,
+    easeLinearity: 0.25,
+}
