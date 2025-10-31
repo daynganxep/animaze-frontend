@@ -11,8 +11,11 @@ import { useEffect, useState } from 'react';
 import { useMapEvents } from 'react-leaflet';
 import { useSelector } from 'react-redux';
 import PaintedAccount from './painted-account';
+import { useTranslation } from 'react-i18next';
+import { NULL_COLOR_INDEX } from '@/tools/data.tool';
 
 function Tracker() {
+    const { t } = useTranslation();
     const [highlight, setHighlight] = useState(null);
     const [selected, setSelected] = useState(null);
     const { mode, frame } = useSelector(s => s.animation);
@@ -66,6 +69,14 @@ function Tracker() {
         setSelected(null);
     }
 
+    function toColorName(pixel) {
+        if (!pixel) return "";
+        const colorName = pixel?.colorName;
+        const colorIndex = pixel?.colorIndex;
+        if (colorIndex == NULL_COLOR_INDEX) return "";
+        return ` - ${t("palette." + colorName)} (${colorIndex})`;
+    }
+
     return (
         <>
             {highlight && <Pixel x={highlight.x} y={highlight.y} c={white} opacity={0.1} b={true} />}
@@ -74,21 +85,13 @@ function Tracker() {
             {(selected && isStatic) ? (
                 <Window close={handleClose} sx={{ minWidth: 400 }}>
                     <Stack spacing={1}>
-                        <Typography variant="h6" color="primary" align='center'>
-                            Pixel
+                        <Typography variant="h6" color="primary" align='start'>
+                            Pixel{toColorName(selected?.pixel)}
                         </Typography>
                         <Divider sx={{ width: '100%' }} />
-                        <Stack direction="row" spacing={2} justifyContent="space-between">
-                            <Typography variant="body1">
-                                <strong>X:</strong> {selected.x}
-                            </Typography>
-                            <Typography variant="body1">
-                                <strong>Y:</strong> {selected.y}
-                            </Typography>
-                            <Typography variant="body1">
-                                <strong>Frame:</strong> {frame}
-                            </Typography>
-                        </Stack>
+                        <Typography color="text" fontSize={"large"} fontWeight="bold" variant="body1">
+                            x: {selected.x}, y: {selected.y}, frame: {frame}
+                        </Typography>
                         <PaintedAccount account={selectedAccount} />
                         <PaintButton sx={{ maxWidth: "500px" }} />
                     </Stack>

@@ -1,8 +1,8 @@
 import { COLOR_PALETTE } from "@/configs/palette.config";
 
-function findColorIndex(c) {
+export function findColorIndex(c) {
     const paletteIndex = COLOR_PALETTE
-        .findIndex(cp => (`Wplace ${cp.name}`.toLowerCase() === c.toLowerCase()) || cp.name.toLowerCase() === c.toLowerCase());
+        .findIndex(cp => (`Wplace ${cp.name}`.toLowerCase() === c.toLowerCase()) || cp.name.toLowerCase() === c.toLowerCase() || cp.color.toLowerCase() === c.toLowerCase());
     return paletteIndex !== -1 ? paletteIndex : 0;
 }
 

@@ -25,7 +25,8 @@ export class SectorDataParser {
     const colorIndex = this.dataView.getUint8(pixelStartOffset);
     const accountIndex = this.dataView.getUint16(pixelStartOffset + 1, true);
     const color = (colorIndex === NULL_COLOR_INDEX) ? null : this.colorPalette[colorIndex].color;
+    const colorName = (colorIndex === NULL_COLOR_INDEX) ? null : this.colorPalette[colorIndex].name;
     const accountId = (accountIndex === NULL_ACCOUNT_INDEX) ? null : this.accountLegend[accountIndex];
-    return { color, accountId, publicId: accountId };
+    return { color, accountId, publicId: accountId, colorIndex, colorName };
   }
 }
