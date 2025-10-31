@@ -16,11 +16,11 @@ export default function CustomZoomControl() {
     const map = useMap();
 
     const handleZoomIn = () => {
-        if (map && map._loaded) map.zoomIn();
+        if (map && map._loaded) map.zoomIn(0.5);
     };
 
     const handleZoomOut = () => {
-        if (map && map._loaded) map.zoomOut();
+        if (map && map._loaded) map.zoomOut(0.5);
     };
 
 
