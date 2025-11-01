@@ -51,22 +51,22 @@ function ImportPixels() {
 
     const mutation = useMutation({
         mutationFn: async ({ x, y, f }) => {
-            const pixelsPatchs = processBlueprint({ x, y, f, pixels });
-            const chunkSize = 1000;
-            const chunks = [];
-            for (let i = 0; i < pixelsPatchs.length; i += chunkSize) {
-                chunks.push(pixelsPatchs.slice(i, i + chunkSize));
-            }
-            const results = await Promise.all(chunks.map(chunk => SectorService.paint({ pixels: chunk })));
-            console.log({ results });
-            reset();
-            return { messageCode: "sector-s-1", x, y, f };
+            const results = await SectorService.paint(processBlueprint({ x, y, f, pixels }));
+            return { results, x, y, f };
         },
-        onSuccess: ({ messageCode, x, y, f }) => {
+        onSuccess: ({ results, x, y, f }) => {
             dialog.close();
-            toast.success(messageCode);
+            reset();
             dispatch(animationActions.setStates({ field: "frame", value: f }));
             map.flyTo([y, x], map.getZoom(), flyOptions);
+            for (let result of results) {
+                const [res, err] = result;
+                if (err) {
+                    toast.error(err.messageCode);
+                } else {
+                    toast.success(res.messageCode);
+                }
+            }
         },
     });
 
