@@ -1,5 +1,5 @@
 import GeneralDialog from '@/components/dialog/general-dialog';
-import { Box, IconButton, Tooltip } from '@mui/material';
+import { Box, IconButton, Stack, Tooltip } from '@mui/material';
 import GoogleLoginOauth2 from '@/components/auth/google-login-oauth2';
 import { useSelector } from 'react-redux';
 import { useEffect, useRef, } from 'react';
@@ -48,7 +48,9 @@ export default function LoginButton() {
             <Box sx={{ textAlign: 'center', my: 2, color: 'text.secondary' }}>
                 {t("ui.welcome")}
             </Box>
-            <GoogleLoginOauth2 closeDialog={dialog.close} />
+            <Stack justifyContent={"center"}>
+                <GoogleLoginOauth2 closeDialog={dialog.close} />
+            </Stack>
             <Box sx={{
                 fontSize: '0.75rem',
                 textAlign: 'center',
@@ -58,6 +60,6 @@ export default function LoginButton() {
             }}>
                 {t("ui.policy")}
             </Box>
-        </GeneralDialog>
+        </GeneralDialog >
     );
 }
