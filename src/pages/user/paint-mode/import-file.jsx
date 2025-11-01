@@ -59,13 +59,13 @@ function ImportPixels() {
             reset();
             dispatch(animationActions.setStates({ field: "frame", value: f }));
             map.flyTo([y, x], map.getZoom(), flyOptions);
-            for (let result of results) {
-                const [res, err] = result;
-                if (err) {
-                    toast.error(err.messageCode);
-                } else {
-                    toast.success(res.messageCode);
-                }
+
+            const err = results.find(([, err]) => !!err);
+            const res = results.find(([res,]) => !!res);
+            if (err) {
+                toast.error(err.messageCode);
+            } else {
+                toast.success(res.messageCode);
             }
         },
     });
