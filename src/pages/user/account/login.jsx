@@ -48,7 +48,7 @@ export default function LoginButton() {
             <Box sx={{ textAlign: 'center', my: 2, color: 'text.secondary' }}>
                 {t("ui.welcome")}
             </Box>
-            <Stack justifyContent={"center"}>
+            <Stack direction={"row"} justifyContent={"center"} alignItems={"center"}>
                 <GoogleLoginOauth2 closeDialog={dialog.close} />
             </Stack>
             <Box sx={{
