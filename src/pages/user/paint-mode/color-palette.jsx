@@ -17,7 +17,7 @@ export default memo(function ColorPalette({ selectedColor, setSelectedColor, pai
                 gap: 0.5,
                 p: 1,
                 width: "100%",
-                maxHeight: 300,
+                maxHeight: 150,
                 overflowY: "auto",
                 pointerEvents: isDisabled ? "none" : "auto",
                 opacity: isDisabled ? 0.1 : 1,

@@ -27,6 +27,7 @@ export default function GoogleLoginOauth2({ closeDialog }) {
     return (
         <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
             <GoogleLogin
+                useOneTap={false}
                 onSuccess={handleSuccess}
                 onError={handleError}
                 theme="filled_black"
@@ -36,6 +37,7 @@ export default function GoogleLoginOauth2({ closeDialog }) {
                 logo_alignment="left"
                 ux_mode="popup"
                 width="100%"
+                auto_select={false}
             />
         </GoogleOAuthProvider>
     );

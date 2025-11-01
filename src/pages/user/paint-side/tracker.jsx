@@ -100,8 +100,8 @@ function Tracker() {
             {selected && <Pixel x={selected.x} y={selected.y} c={white} opacity={0.1} b={true} />}
 
             {(selected && isStatic) ? (
-                <Window close={handleClose} sx={{ minWidth: 400 }}>
-                    <Stack spacing={1}>
+                <Window close={handleClose}>
+                    <Stack spacing={2}>
                         <Typography variant="h6" color="primary" align='start'>
                             Pixel{toColorName(selected?.pixel)}
                         </Typography>
@@ -109,19 +109,19 @@ function Tracker() {
                         <Typography color="text" fontSize={"large"} fontWeight="bold" variant="body1">
                             x: {selected.x}, y: {selected.y}, frame: {frame}
                         </Typography>
-                        <Stack direction={"row"}>
-                            <PaintedAccount account={selectedAccount} />
+                        <PaintedAccount account={selectedAccount} />
+                        <Stack direction={"row"} >
+                            <PaintButton />
                             <Tooltip title={t('ui.shared-link')} placement="top">
-                                <IconButton onClick={copyLink} size="small" color="primary">
+                                <IconButton sx={{ width: 40, height: 40 }} onClick={copyLink} size="small" color="primary">
                                     <Share2 />
                                 </IconButton>
                             </Tooltip>
                         </Stack>
-                        <PaintButton sx={{ maxWidth: "500px" }} />
                     </Stack>
                 </Window >
             ) : (
-                <PaintButton />
+                <PaintButton sx={{ maxWidth: 300 }} />
             )
             }
         </>

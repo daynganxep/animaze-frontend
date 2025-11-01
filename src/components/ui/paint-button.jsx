@@ -32,7 +32,7 @@ function PaintButton({ sx }) {
         ref={ref}
         variant="outlined"
         size="large"
-        sx={{ width: "100%", maxWidth: "200px", borderRadius: 10, ...sx }}
+        sx={{ flex: 1, borderRadius: 10, ...sx }}
         onClick={handeOpenPaintMode}
         endIcon={<Palette></Palette>}>
         {t("ui.paint")}

@@ -44,73 +44,74 @@ export default function AccountButton({ account }) {
         onClickOutside={tippy.close}
         interactive={true}
         visible={tippy.opening}
-        placement='left-start'
+        placement='auto-end'
         render={(attrs) => (
             <Window {...attrs} close={tippy.close}>
-                <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between" mb={1}>
-                    <Avatar
-                        src={account?.avatar}
-                        srcSet={account?.avatar}
-                        variant="circular"
-                        sx={{
-                            width: 80,
-                            height: 80,
-                            cursor: "pointer",
-                            transition: "0.3s",
-                            "&:hover": { boxShadow: 3 },
-                        }}
-                    />
-                    <Stack spacing={0.5} alignItems="start" sx={{ pr: 4, minWidth: 220 }}>
-                        <Typography
-                            variant="subtitle1"
-                            fontWeight="bold"
-                            noWrap
+                <Stack direction={"column"} spacing={2}>
+                    <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between" mb={1}>
+                        <Avatar
+                            src={account?.avatar}
+                            srcSet={account?.avatar}
+                            variant="circular"
                             sx={{
-                                maxWidth: 200,
-                                textOverflow: "ellipsis",
-                                overflow: "hidden",
-                                whiteSpace: "nowrap",
+                                width: 80,
+                                height: 80,
+                                cursor: "pointer",
+                                transition: "0.3s",
+                                "&:hover": { boxShadow: 3 },
                             }}
-                        >
-                            {account?.name}
-                        </Typography>
-
-
-                        <Stack direction="row" alignItems="center" spacing={1}>
-                            <Typography variant="subtitle1" color="text.secondary" noWrap>
-                                {t("ui.id")}: {account?.publicId}
+                        />
+                        <Stack spacing={0.5} alignItems="start" sx={{ pr: 4, minWidth: 220 }}>
+                            <Typography
+                                variant="subtitle1"
+                                fontWeight="bold"
+                                noWrap
+                                sx={{
+                                    maxWidth: 200,
+                                    textOverflow: "ellipsis",
+                                    overflow: "hidden",
+                                    whiteSpace: "nowrap",
+                                }}
+                            >
+                                {account?.name}
                             </Typography>
 
-                            <Tooltip arrow placement="right" title={copied ? t("ui.copied-id") : t("ui.copy-id")}>
-                                <Copy onClick={handleCopy} fontSize="small" />
-                            </Tooltip>
-                        </Stack>
 
-                        <Typography variant="subtitle1" color="text.secondary">
+                            <Stack direction="row" alignItems="center" spacing={1}>
+                                <Typography variant="subtitle1" color="text.secondary" noWrap>
+                                    {t("ui.id")}: {account?.publicId}
+                                </Typography>
+
+                                <Tooltip arrow placement="right" title={copied ? t("ui.copied-id") : t("ui.copy-id")}>
+                                    <Copy onClick={handleCopy} fontSize="small" />
+                                </Tooltip>
+                            </Stack>
+
+                            {/* <Typography variant="subtitle1" color="text.secondary">
                             {t("ui.provider")}: {account?.provider}
-                        </Typography>
+                        </Typography> */}
+                        </Stack>
                     </Stack>
+                    <Stack direction="row" spacing={2}>
+                        {languages.map((lang) => (
+                            <Button
+                                key={lang.code}
+                                onClick={() => i18n.changeLanguage(lang.code)}
+                                sx={{ flexGrow: 1, bgcolor: i18n.language.startsWith(lang.code) ? "background.paper" : "background.light" }}
+                                size="small"
+                            >
+                                {lang.name}
+                            </Button>
+                        ))}
+                    </Stack>
+                    <Button
+                        onClick={handleLogout}
+                        size="medium"
+                        sx={{ width: "100%", borderRadius: 10 }}
+                        endIcon={<LogOut></LogOut>}>
+                        {t("ui.log-out")}
+                    </Button>
                 </Stack>
-                <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
-                    {languages.map((lang) => (
-                        <Button
-                            key={lang.code}
-                            onClick={() => i18n.changeLanguage(lang.code)}
-                            variant={i18n.language.startsWith(lang.code) ? 'contained' : 'outlined'}
-                            size="small"
-                            sx={{ flexGrow: 1 }}
-                        >
-                            {lang.name}
-                        </Button>
-                    ))}
-                </Stack>
-                <Button
-                    onClick={handleLogout}
-                    size="medium"
-                    sx={{ width: "100%", borderRadius: 10 }}
-                    endIcon={<LogOut></LogOut>}>
-                    {t("ui.log-out")}
-                </Button>
             </Window>
         )}>
         <Avatar

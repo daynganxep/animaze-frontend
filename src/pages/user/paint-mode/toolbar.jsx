@@ -45,7 +45,13 @@ export default memo(function Toolbar({ paintingPixels, paintType, togglePaintTyp
 
 
     return (
-        <Stack direction="row" justifyContent="space-between" alignItems="end" p={1} >
+        <Stack
+            direction={{ xs: "column", sm: "row" }}
+            justifyContent="space-between"
+            alignItems={{ xs: "stretch", sm: "end" }}
+            spacing={{ xs: 1, sm: 0 }}
+            p={1}
+        >
             <Stack direction="row" spacing={2}>
                 <Tooltip arrow placement="top" title={t("ui.eraser")}>
                     <IconButton
