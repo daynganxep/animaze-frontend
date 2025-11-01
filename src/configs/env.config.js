@@ -6,6 +6,7 @@ function getEnvValue(name, defaultValue = "") {
 }
 
 export const API_URL = getEnvValue("VITE_API_URL", "http://localhost:8000/api/v1");
+export const API_KEY = getEnvValue("VITE_API_KEY", "");
 export const CLIENT_URL = getEnvValue("VITE_CLIENT_URL", "http://localhost:3000");
 export const INTERVAL_REFRESH_TOKEN =
     _.toNumber(getEnvValue("VITE_INTERVAL_REFRESH_TOKEN", "3600")) *

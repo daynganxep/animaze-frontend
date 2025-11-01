@@ -52,6 +52,7 @@
         "app-f-1": "Lỗi",
         "app-f-2": "Lỗi nội bộ",
         "app-f-3": "Trường không hợp lệ",
+        "app-f-4": "Sai khóa API",
         "jwt-f-1-3": "Không tìm thấy mã thông báo làm mới",
         "jwt-f-1-1": "Mã thông báo làm mới đã hết hạn",
         "jwt-f-1-2": "Mã thông báo làm mới không hợp lệ",
