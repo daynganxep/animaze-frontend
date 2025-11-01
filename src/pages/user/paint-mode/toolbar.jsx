@@ -20,12 +20,15 @@ export default memo(function Toolbar({ paintingPixels, paintType, togglePaintTyp
 
     const { mutate, isPending } = useMutation({
         mutationFn: SectorService.paint,
-        onSuccess: ([res, err]) => {
-            if (err) {
-                toast.error(err.messageCode);
-            } else {
-                toast.success(res.messageCode);
-                dispatch(uiActions.setStates({ field: "paintMode", value: false }))
+        onSuccess: (results) => {
+            dispatch(uiActions.setStates({ field: "paintMode", value: false }))
+            for (let result of results) {
+                const [res, err] = result;
+                if (err) {
+                    toast.error(err.messageCode);
+                } else {
+                    toast.success(res.messageCode);
+                }
             }
         },
     });
@@ -39,9 +42,7 @@ export default memo(function Toolbar({ paintingPixels, paintType, togglePaintTyp
         }
     }
 
-    const handleUpdate = () => {
-        mutate({ pixels: Array.from(paintingPixels.values()) });
-    };
+    const handleUpdate = () => mutate(Array.from(paintingPixels.values()));
 
 
     return (
