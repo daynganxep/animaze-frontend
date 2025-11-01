@@ -26,8 +26,13 @@ const SectorService = {
         return [{ frames, accountLegend, etag: newEtag }, null];
     },
 
-    paint(body) {
-        return service(axios.post("/sectors/paint", body));
+    async paint(pixelsPatchs) {
+        const chunkSize = 1000;
+        const chunks = [];
+        for (let i = 0; i < pixelsPatchs.length; i += chunkSize) {
+            chunks.push(pixelsPatchs.slice(i, i + chunkSize));
+        }
+        return await Promise.all(chunks.map(chunk => service(axios.post("/sectors/paint", { pixels: chunk }))));
     },
 };
 
