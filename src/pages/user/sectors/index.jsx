@@ -17,6 +17,7 @@ export default function Sectors() {
     const { mode, frame, speed } = useSelector((state) => state.animation);
     const dispatch = useDispatch();
     const layerRef = useRef(L.layerGroup()).current;
+    const { paintMode } = useSelector(state => state.ui);
 
 
     useEffect(() => {
@@ -29,6 +30,7 @@ export default function Sectors() {
     }, [mode, speed, frame, dispatch]);
 
     const updateVisibleSectors = useCallback(() => {
+        if (paintMode) return;
         if (map.getZoom() < MIN_VISIBLE_ZOOM) {
             layerRef.clearLayers();
             setVisibleSectors(new Set());
@@ -55,7 +57,7 @@ export default function Sectors() {
             }
         }
         setVisibleSectors(newVisible);
-    }, [map, layerRef]);
+    }, [map, layerRef, paintMode]);
 
     useMapEvents({
         moveend: updateVisibleSectors,
