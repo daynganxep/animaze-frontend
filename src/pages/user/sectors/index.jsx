@@ -15,7 +15,7 @@ import socket from '@/tools/socket.tool';
 export default function Sectors() {
     const [visibleSectors, setVisibleSectors] = useState(new Set());
     const { mode, frame, speed } = useSelector((state) => state.animation);
-    const { paintMode, update } = useSelector(state => state.ui);
+    const { paintMode, updatedSector } = useSelector(state => state.ui);
     const sectorsCache = useSectorsCache();
     const subscribedSectorsRef = useRef(new Set());
     const dispatch = useDispatch();
@@ -61,8 +61,15 @@ export default function Sectors() {
         setVisibleSectors(newVisible);
     }, [map, layerRef, paintMode]);
 
+    useMapEvents({
+        moveend: updateVisibleSectors,
+        zoomend: updateVisibleSectors,
+        viewreset: updateVisibleSectors,
+        load: updateVisibleSectors,
+    });
+
+    // Handle Render sectors
     const renderVisibleSectors = useCallback(() => {
-        console.log("renderVisibleSectors");
         visibleSectors.forEach((sectorId) => {
             const sector = sectorsCache.get(sectorId);
             if (!sector || !sector.frameCanvases) return;
@@ -92,13 +99,6 @@ export default function Sectors() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [frame, layerRef, visibleSectors]);
 
-    useMapEvents({
-        moveend: updateVisibleSectors,
-        zoomend: updateVisibleSectors,
-        viewreset: updateVisibleSectors,
-        load: updateVisibleSectors,
-    });
-
     // Handle WebSocket subscriptions
     useEffect(() => {
         const oldSectors = subscribedSectorsRef.current;
@@ -118,10 +118,10 @@ export default function Sectors() {
         subscribedSectorsRef.current = newSectors;
     }, [visibleSectors]);
 
-
+    // Handle fetch sectors
     useEffect(() => {
         (async () => {
-            const fetchPromises = Array.from(visibleSectors).map(async (sectorId) => {
+            const fetchPromise = async (sectorId) => {
                 const cached = sectorsCache.get(sectorId);
                 if (cached === EMPTY_SECTOR) return null;
                 if (cached) return { sectorId, data: cached };
@@ -160,51 +160,99 @@ export default function Sectors() {
                 }
 
                 return { sectorId, data: { ...data, frameCanvases } };
-            });
-
+            }
+            const fetchPromises = Array.from(visibleSectors).map(fetchPromise);
             const results = await Promise.all(fetchPromises);
             results.forEach((result) => result && sectorsCache.set(result.sectorId, result.data));
-            console.log("Fetch sector");
+
             await renderVisibleSectors();
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [visibleSectors, update]);
+    }, [visibleSectors]);
 
+    // Handle Render updated sector
+    const renderVisibleSector = useCallback(() => {
+        if (!updatedSector) return;
+        const { sectorId } = updatedSector;
+        const sector = sectorsCache.get(sectorId);
+        if (!sector || !sector.frameCanvases) return;
 
-    /*
+        const canvas = sector.frameCanvases[frame];
+        if (!canvas) return;
 
+        const [x, y] = sectorId.split(':').map(Number);
+        const bounds = [
+            [y * SECTOR_SIZE, x * SECTOR_SIZE],
+            [(y + 1) * SECTOR_SIZE, (x + 1) * SECTOR_SIZE],
+        ];
+
+        const existing = layerRef.getLayers().find((l) => l.options && l.options.sectorId === sectorId);
+
+        if (existing) {
+            existing.setUrl(canvas.toDataURL());
+        } else {
+            const overlay = L.imageOverlay(canvas.toDataURL(), bounds, {
+                interactive: true,
+                className: 'pixelated-canvas',
+                sectorId,
+            });
+            overlay.addTo(layerRef);
+        }
+    }, [frame, layerRef, updatedSector, sectorsCache]);
+
+    // Handle fetch updated sector
     useEffect(() => {
-        visibleSectors.forEach((sectorId) => {
-            const sector = sectorsCache.get(sectorId);
-            if (!sector || !sector.frameCanvases) return;
+        console.log({ updatedSector });
+        (async () => {
+            const fetchPromise = async (sectorId) => {
+                const cached = sectorsCache.get(sectorId);
+                if (cached === EMPTY_SECTOR) return null;
+                if (cached) return { sectorId, data: cached };
 
-            const canvas = sector.frameCanvases[frame];
-            if (!canvas) return;
+                const [x, y] = sectorId.split(':').map(Number);
+                const [data, err] = await SectorService.get(x, y, cached?.etag);
 
-            const [x, y] = sectorId.split(':').map(Number);
-            const bounds = [
-                [y * SECTOR_SIZE, x * SECTOR_SIZE],
-                [(y + 1) * SECTOR_SIZE, (x + 1) * SECTOR_SIZE],
-            ];
+                if (err) {
+                    if (err.status === 404) {
+                        sectorsCache.set(sectorId, EMPTY_SECTOR);
+                    }
+                    return null;
+                }
 
-            const existing = layerRef.getLayers().find((l) => l.options && l.options.sectorId === sectorId);
+                const parser = new SectorDataParser(data.frames, data.accountLegend);
+                const frameCanvases = [];
 
-            if (existing) {
-                existing.setUrl(canvas.toDataURL());
-            } else {
-                const overlay = L.imageOverlay(canvas.toDataURL(), bounds, {
-                    interactive: true,
-                    className: 'pixelated-canvas',
-                    sectorId,
-                });
-                overlay.addTo(layerRef);
+                for (let i = 0; i < FRAMES_COUNT; i++) {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = SECTOR_SIZE;
+                    canvas.height = SECTOR_SIZE;
+                    const ctx = canvas.getContext('2d');
+                    if (!ctx) continue;
+                    ctx.imageSmoothingEnabled = false;
+
+                    for (let py = 0; py < SECTOR_SIZE; py++) {
+                        for (let px = 0; px < SECTOR_SIZE; px++) {
+                            const pixel = parser.getPixel(i, px, py);
+                            if (pixel && pixel.color) {
+                                ctx.fillStyle = pixel.color;
+                                ctx.fillRect(px, py, 1, 1);
+                            }
+                        }
+                    }
+                    frameCanvases.push(canvas);
+                }
+
+                return { sectorId, data: { ...data, frameCanvases } };
             }
-        });
+
+            if (!updatedSector) return;
+            const { sectorId } = updatedSector;
+            const result = await fetchPromise(sectorId)
+            result && sectorsCache.set(result.sectorId, result.data)
+            await renderVisibleSector();
+        })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [frame, layerRef, visibleSectors]);
-
-
-    */
+    }, [visibleSectors, updatedSector]);
 
     useEffect(() => {
         layerRef.addTo(map);

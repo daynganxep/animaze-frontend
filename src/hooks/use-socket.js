@@ -17,7 +17,7 @@ export function useSocket() {
       }
       console.log(`%cReceived sector update from server: ${sectorId}`, 'color: #ff9900');
       sectorsCache.del(sectorId);
-      dispatch(uiActions.forceUpdate());
+      dispatch(uiActions.forceUpdate(sectorId));
     };
 
     socket.on('sector_updated', handleSectorUpdate);
