@@ -9,8 +9,11 @@ import theme from "./theme";
 
 import "./global.css";
 
+import { useSocket } from "@/hooks/use-socket";
+
 function App() {
   useInitialApp();
+  useSocket();
 
   return (
     <ThemeProvider theme={theme}>
