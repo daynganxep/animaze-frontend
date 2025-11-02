@@ -50,9 +50,18 @@ export function useSectorsCache() {
         _lruOrder.push(sectorId);
     }
 
-    function getAll() {
-        return _sectorsCache;
+    function del(sectorId) {
+        if (_sectorsCache.has(sectorId)) {
+            _sectorsCache.delete(sectorId);
+            const index = _lruOrder.indexOf(sectorId);
+            if (index > -1) {
+                _lruOrder.splice(index, 1);
+            }
+            console.log(`Cache for sector ${sectorId} deleted.`);
+            return true;
+        }
+        return false;
     }
 
-    return { get, set, getAll, getPixel };
+    return { get, set, getPixel, del };
 }

@@ -41,3 +41,5 @@ export const SECTOR_DEBOUD = 500;
 export const CHUNK_SIZE = 1000;
 
 export const MAX_CACHE_SIZE = 400;
+
+export const EMPTY_SECTOR = 0;

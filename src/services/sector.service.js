@@ -4,6 +4,7 @@ const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 const SectorService = {
     async get(x, y, etag = null) {
+        console.log("GET :: ", x, y);
         const headers = etag ? { 'If-None-Match': etag } : {};
         const [res, err] = await service(axios.get(`/sectors/${x}/${y}`, {
             headers,

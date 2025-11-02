@@ -13,7 +13,7 @@ export function useSocket() {
         return;
       }
       console.log(`%cReceived sector update from server: ${sectorId}`, 'color: #ff9900');
-      sectorsCache.delete(sectorId);
+      sectorsCache.del(sectorId);
     };
 
     socket.on('sector_updated', handleSectorUpdate);

@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import L from 'leaflet';
 import SectorService from '@/services/sector.service';
 import { SectorDataParser } from '@/tools/data.tool';
-import { ANIMATION_MODE, MIN_VISIBLE_ZOOM, SECTOR_DEBOUD } from '@/configs/const.config';
+import { ANIMATION_MODE, EMPTY_SECTOR, MIN_VISIBLE_ZOOM, SECTOR_DEBOUD } from '@/configs/const.config';
 import { useDispatch } from 'react-redux';
 import { animationActions } from '@/redux/slices/animation.slice';
 import { FRAMES_COUNT, SECTOR_SIZE, WORLD_DIMENSION } from '@/configs/env.config';
@@ -75,16 +75,17 @@ export default function Sectors() {
         const fetchNewSectors = async () => {
             const fetchPromises = Array.from(debouncedVisibleSectors).map(async (sectorId) => {
                 const cached = sectorsCache.get(sectorId);
+                if (cached === EMPTY_SECTOR) return null;
+                if (cached) return { sectorId, data: cached };
+
                 const [x, y] = sectorId.split(':').map(Number);
                 const [data, err] = await SectorService.get(x, y, cached?.etag);
 
                 if (err) {
-                    if (cached) return { sectorId, data: cached };
+                    if (err.status === 404) {
+                        sectorsCache.set(sectorId, EMPTY_SECTOR);
+                    }
                     return null;
-                }
-
-                if (!data) {
-                    return { sectorId, data: cached };
                 }
 
                 const parser = new SectorDataParser(data.frames, data.accountLegend);
