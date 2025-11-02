@@ -68,9 +68,8 @@ function ImportPixels({ lastSelected }) {
             reset();
             dispatch(animationActions.setStates({ field: "frame", value: f }));
             map.flyTo([y, x], map.getZoom(), flyOptions);
-
-            const err = results.find(([, err]) => !!err);
-            const res = results.find(([res,]) => !!res);
+            const res = results.find(([res,]) => !!res)?.[0];
+            const err = results.find(([, err]) => !!err)?.[1];
             if (err) {
                 toast.error(err.messageCode);
             } else {

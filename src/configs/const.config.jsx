@@ -34,7 +34,7 @@ export const flyOptions = {
     easeLinearity: 0.25,
 }
 
-export const PAINT_DELAY = 1000;
+export const PAINT_DELAY = 2000;
 
 export const SECTOR_DEBOUD = 0;
 

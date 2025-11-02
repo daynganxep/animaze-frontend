@@ -21,6 +21,7 @@ export default function Sectors() {
     const dispatch = useDispatch();
     const layerRef = useRef(L.layerGroup()).current;
     const map = useMap();
+    const [rerender, setRender] = useState();
 
     useEffect(() => {
         const frameInterval = setInterval(() => {
@@ -69,7 +70,7 @@ export default function Sectors() {
     });
 
     // Handle Render sectors
-    const renderVisibleSectors = useCallback(() => {
+    useEffect(() => {
         visibleSectors.forEach((sectorId) => {
             const sector = sectorsCache.get(sectorId);
             if (!sector || !sector.frameCanvases) return;
@@ -97,7 +98,7 @@ export default function Sectors() {
             }
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [frame, layerRef, visibleSectors]);
+    }, [frame, layerRef, rerender]);
 
     // Handle WebSocket subscriptions
     useEffect(() => {
@@ -164,8 +165,7 @@ export default function Sectors() {
             const fetchPromises = Array.from(visibleSectors).map(fetchPromise);
             const results = await Promise.all(fetchPromises);
             results.forEach((result) => result && sectorsCache.set(result.sectorId, result.data));
-
-            await renderVisibleSectors();
+            setRender((new Date()).toISOString())
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [visibleSectors]);
@@ -202,7 +202,6 @@ export default function Sectors() {
 
     // Handle fetch updated sector
     useEffect(() => {
-        console.log({ updatedSector });
         (async () => {
             const fetchPromise = async (sectorId) => {
                 const cached = sectorsCache.get(sectorId);
