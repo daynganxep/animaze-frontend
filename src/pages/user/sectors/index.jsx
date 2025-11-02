@@ -12,10 +12,13 @@ import { useSectorsCache } from '@/hooks/use-sectors-cache';
 import { useDebounce } from '@/hooks/use-debounce';
 import { debounce } from 'lodash';
 
+import socket from '@/tools/socket.tool';
+
 export default function Sectors() {
     const map = useMap();
     const sectorsCache = useSectorsCache();
     const [visibleSectors, setVisibleSectors] = useState(new Set());
+    const subscribedSectorsRef = useRef(new Set());
     const debouncedVisibleSectors = useDebounce(visibleSectors, SECTOR_DEBOUD);
     const { mode, frame, speed } = useSelector((state) => state.animation);
     const dispatch = useDispatch();
@@ -70,6 +73,26 @@ export default function Sectors() {
         viewreset: debouncedUpdateVisibleSectors,
         load: debouncedUpdateVisibleSectors,
     });
+
+    // Handle WebSocket subscriptions
+    useEffect(() => {
+        const oldSectors = subscribedSectorsRef.current;
+        const newSectors = debouncedVisibleSectors;
+
+        const toUnsubscribe = [...oldSectors].filter(s => !newSectors.has(s));
+        const toSubscribe = [...newSectors].filter(s => !oldSectors.has(s));
+
+        if (toUnsubscribe.length > 0) {
+            toUnsubscribe.forEach(sectorId => socket.emit('unsubscribe', sectorId));
+        }
+
+        if (toSubscribe.length > 0) {
+            toSubscribe.forEach(sectorId => socket.emit('subscribe', sectorId));
+        }
+
+        subscribedSectorsRef.current = newSectors;
+    }, [debouncedVisibleSectors]);
+
 
     useEffect(() => {
         const fetchNewSectors = async () => {
