@@ -26,16 +26,18 @@ import { useMap } from 'react-leaflet';
 import { useDispatch } from 'react-redux';
 import { animationActions } from '@/redux/slices/animation.slice';
 import { flyOptions } from '@/configs/const.config';
+import { useSelector } from 'react-redux';
 
-function ImportPixels() {
+function ImportPixels({ lastSelected }) {
     const { t } = useTranslation();
     const dialog = useDialog();
     const map = useMap();
     const dispatch = useDispatch();
+    const { frame } = useSelector(s => s.animation);
 
     const form = useForm({
         resolver: joiResolver(importPixelsSchema),
-        defaultValues: { x: 0, y: 0, f: 0, file: null }
+        defaultValues: { x: 0, y: 0, f: frame, file: null }
     });
 
     const [pixels, setPixels] = useState([]);
@@ -49,6 +51,13 @@ function ImportPixels() {
         formState: { errors },
     } = form;
 
+    useEffect(() => {
+        if (lastSelected) {
+            setValue("x", lastSelected.x);
+            setValue("y", lastSelected.y);
+        }
+    }, [lastSelected, setValue])
+
     const mutation = useMutation({
         mutationFn: async ({ x, y, f }) => {
             const results = await SectorService.paint(processBlueprint({ x, y, f, pixels }));
@@ -59,9 +68,8 @@ function ImportPixels() {
             reset();
             dispatch(animationActions.setStates({ field: "frame", value: f }));
             map.flyTo([y, x], map.getZoom(), flyOptions);
-
-            const err = results.find(([, err]) => !!err);
-            const res = results.find(([res,]) => !!res);
+            const res = results.find(([res,]) => !!res)?.[0];
+            const err = results.find(([, err]) => !!err)?.[1];
             if (err) {
                 toast.error(err.messageCode);
             } else {
@@ -166,7 +174,7 @@ function ImportPixels() {
                 label={t("ui.upload-file") + " *.json"}
             />
 
-            <Box sx={{ mt: 2, p: 2, borderRadius: 2, bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider', display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Stack sx={{ mt: 2, p: 2, borderRadius: 2, bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider', display: 'flex', alignItems: 'center', gap: 2 }}>
                 <Box sx={{ flex: 1 }}>
                     <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>{t('ui.import-help-title') || 'Convert your artwork to Animaze JSON'}</Typography>
                     <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
@@ -174,8 +182,8 @@ function ImportPixels() {
                     </Typography>
                 </Box>
                 <Button
-                    variant="contained"
-                    color="primary"
+                    variant="outlined"
+                    color="secondary"
                     href="https://wplacepaint.com/converter/"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -183,7 +191,7 @@ function ImportPixels() {
                 >
                     {t('ui.open-converter') || 'Open Converter'}
                 </Button>
-            </Box>
+            </Stack>
         </ FormDialog>
     );
 }

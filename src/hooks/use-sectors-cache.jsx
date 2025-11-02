@@ -1,7 +1,7 @@
+import { MAX_CACHE_SIZE } from "@/configs/const.config";
 import { SECTOR_SIZE } from "@/configs/env.config";
 import { SectorDataParser } from "@/tools/data.tool";
 
-const MAX_CACHE_SIZE = 100;
 const _sectorsCache = new Map();
 const _lruOrder = []; // Track order of sector access
 
@@ -50,9 +50,18 @@ export function useSectorsCache() {
         _lruOrder.push(sectorId);
     }
 
-    function getAll() {
-        return _sectorsCache;
+    function del(sectorId) {
+        if (_sectorsCache.has(sectorId)) {
+            _sectorsCache.delete(sectorId);
+            const index = _lruOrder.indexOf(sectorId);
+            if (index > -1) {
+                _lruOrder.splice(index, 1);
+            }
+            console.log(`Cache for sector ${sectorId} deleted.`);
+            return true;
+        }
+        return false;
     }
 
-    return { get, set, getAll, getPixel };
+    return { get, set, getPixel, del };
 }
