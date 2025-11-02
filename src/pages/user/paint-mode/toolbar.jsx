@@ -11,7 +11,7 @@ import { uiActions } from "@/redux/slices/ui.slice";
 import { useTranslation } from "react-i18next";
 import ImportFile from "./import-file";
 
-export default memo(function Toolbar({ paintingPixels, paintType, togglePaintType, bone, toggleBone, handleClear }) {
+export default memo(function Toolbar({ lastSelected, paintingPixels, paintType, togglePaintType, bone, toggleBone, handleClear }) {
     const { t } = useTranslation();
     const isEraserActive = paintType === PAINT_TYPE.ERASER;
     const isBoneActive = bone;
@@ -78,7 +78,7 @@ export default memo(function Toolbar({ paintingPixels, paintType, togglePaintTyp
                         <BrushCleaning />
                     </IconButton>
                 </Tooltip>
-                <ImportFile />
+                <ImportFile lastSelected={lastSelected} />
             </Stack>
             <Button
                 loading={isPending}

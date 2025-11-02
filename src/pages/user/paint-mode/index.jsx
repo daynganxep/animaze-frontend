@@ -16,6 +16,7 @@ export default function PaintMode() {
     const [highlight, setHighlight] = useState(null);
     const [selectedColor, setSelectedColor] = useState(0);
     const [paintingPixels, setPaintingPixels] = useState(new Map());
+    const [lastSelected, setLastSelected] = useState(null);
     const [paintType, setPaintType] = useState(PAINT_TYPE.PAINT);
     const [bone, setBone] = useState(true);
     const { frame } = useSelector(s => s.animation);
@@ -97,6 +98,7 @@ export default function PaintMode() {
     }
 
     function handlePaint(x, y) {
+        setLastSelected({ x, y });
         setPaintingPixels(prev => {
             const newMap = new Map(prev);
             newMap.set(`${x}:${y}:${frame}`, { x, y, c: selectedColor, f: frame });
@@ -105,6 +107,7 @@ export default function PaintMode() {
     }
 
     function handleEraser(x, y) {
+        setLastSelected({ x, y });
         setPaintingPixels(prev => {
             const newMap = new Map(prev);
             newMap.delete(`${x}:${y}:${frame}`);
@@ -122,7 +125,7 @@ export default function PaintMode() {
 
     return (
         <Window sx={{ width: "100%" }} close={handleClosePaintMode}>
-            <Toolbar paintingPixels={paintingPixels} handleClear={handleClear} paintType={paintType} togglePaintType={togglePaintType} bone={bone} toggleBone={toggleBone} />
+            <Toolbar lastSelected={lastSelected} paintingPixels={paintingPixels} handleClear={handleClear} paintType={paintType} togglePaintType={togglePaintType} bone={bone} toggleBone={toggleBone} />
             <ColorPalette selectedColor={selectedColor} setSelectedColor={setSelectedColor} paintType={paintType} />
             <PaintingPixels paintingPixels={paintingPixels} frame={frame} bone={bone} />
             <HighlightPixel highlight={highlight} selectedColor={selectedColor} paintType={paintType} />

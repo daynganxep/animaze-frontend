@@ -1,7 +1,7 @@
+import { MAX_CACHE_SIZE } from "@/configs/const.config";
 import { SECTOR_SIZE } from "@/configs/env.config";
 import { SectorDataParser } from "@/tools/data.tool";
 
-const MAX_CACHE_SIZE = 100;
 const _sectorsCache = new Map();
 const _lruOrder = []; // Track order of sector access
 

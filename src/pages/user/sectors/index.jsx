@@ -4,16 +4,19 @@ import { useSelector } from 'react-redux';
 import L from 'leaflet';
 import SectorService from '@/services/sector.service';
 import { SectorDataParser } from '@/tools/data.tool';
-import { ANIMATION_MODE, MIN_VISIBLE_ZOOM } from '@/configs/const.config';
+import { ANIMATION_MODE, MIN_VISIBLE_ZOOM, SECTOR_DEBOUD } from '@/configs/const.config';
 import { useDispatch } from 'react-redux';
 import { animationActions } from '@/redux/slices/animation.slice';
 import { FRAMES_COUNT, SECTOR_SIZE, WORLD_DIMENSION } from '@/configs/env.config';
 import { useSectorsCache } from '@/hooks/use-sectors-cache';
+import { useDebounce } from '@/hooks/use-debounce';
+import { debounce } from 'lodash';
 
 export default function Sectors() {
     const map = useMap();
     const sectorsCache = useSectorsCache();
     const [visibleSectors, setVisibleSectors] = useState(new Set());
+    const debouncedVisibleSectors = useDebounce(visibleSectors, SECTOR_DEBOUD);
     const { mode, frame, speed } = useSelector((state) => state.animation);
     const dispatch = useDispatch();
     const layerRef = useRef(L.layerGroup()).current;
@@ -59,27 +62,30 @@ export default function Sectors() {
         setVisibleSectors(newVisible);
     }, [map, layerRef, paintMode]);
 
+    const debouncedUpdateVisibleSectors = useCallback(debounce(updateVisibleSectors, SECTOR_DEBOUD), [updateVisibleSectors]);
+
     useMapEvents({
-        moveend: updateVisibleSectors,
-        zoomend: updateVisibleSectors,
-        viewreset: updateVisibleSectors,
-        load: updateVisibleSectors,
+        moveend: debouncedUpdateVisibleSectors,
+        zoomend: debouncedUpdateVisibleSectors,
+        viewreset: debouncedUpdateVisibleSectors,
+        load: debouncedUpdateVisibleSectors,
     });
 
     useEffect(() => {
         const fetchNewSectors = async () => {
-            const fetchPromises = Array.from(visibleSectors).map(async (sectorId) => {
+            const fetchPromises = Array.from(debouncedVisibleSectors).map(async (sectorId) => {
                 const cached = sectorsCache.get(sectorId);
                 const [x, y] = sectorId.split(':').map(Number);
                 const [data, err] = await SectorService.get(x, y, cached?.etag);
 
                 if (err) {
-                    console.log(`Not found ${sectorId}`);
                     if (cached) return { sectorId, data: cached };
                     return null;
                 }
 
-                if (!data) return { sectorId, data: cached };
+                if (!data) {
+                    return { sectorId, data: cached };
+                }
 
                 const parser = new SectorDataParser(data.frames, data.accountLegend);
                 const frameCanvases = [];
@@ -113,7 +119,7 @@ export default function Sectors() {
 
         fetchNewSectors();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [visibleSectors]);
+    }, [debouncedVisibleSectors]);
 
     useEffect(() => {
         visibleSectors.forEach((sectorId) => {

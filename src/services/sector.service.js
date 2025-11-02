@@ -1,4 +1,6 @@
+import { CHUNK_SIZE, PAINT_DELAY } from '@/configs/const.config';
 import axios, { service } from '@/tools/axios.tool';
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 const SectorService = {
     async get(x, y, etag = null) {
@@ -8,8 +10,13 @@ const SectorService = {
             responseType: 'arraybuffer',
         }), false, true);
 
-        if (err) return [null, err];
-        if (res.status === 304) return [null, null];
+        if (err && err?.status !== 304) {
+            return [null, err];
+        }
+
+        if (err && err?.status === 304) {
+            return [null, null];
+        }
 
         const { data: frames, headers: resHeaders } = res;
         const accountLegendHeader = resHeaders['x-account-legend'];
@@ -25,14 +32,14 @@ const SectorService = {
 
         return [{ frames, accountLegend, etag: newEtag }, null];
     },
-
     async paint(pixelsPatchs) {
-        const chunkSize = 1000;
-        const chunks = [];
-        for (let i = 0; i < pixelsPatchs.length; i += chunkSize) {
-            chunks.push(pixelsPatchs.slice(i, i + chunkSize));
+        const results = [];
+        for (let i = 0; i < pixelsPatchs.length; i += CHUNK_SIZE) {
+            const result = await service(axios.post("/sectors/paint", { pixels: pixelsPatchs.slice(i, i + CHUNK_SIZE) }));
+            results.push(result);
+            await delay(PAINT_DELAY);
         }
-        return await Promise.all(chunks.map(chunk => service(axios.post("/sectors/paint", { pixels: chunk }))));
+        return results;
     },
 };
 

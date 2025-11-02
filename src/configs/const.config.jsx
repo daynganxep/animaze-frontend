@@ -33,3 +33,11 @@ export const flyOptions = {
     duration: 2,
     easeLinearity: 0.25,
 }
+
+export const PAINT_DELAY = 1000;
+
+export const SECTOR_DEBOUD = 500;
+
+export const CHUNK_SIZE = 1000;
+
+export const MAX_CACHE_SIZE = 400;
