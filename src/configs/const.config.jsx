@@ -36,7 +36,7 @@ export const flyOptions = {
 
 export const PAINT_DELAY = 1000;
 
-export const SECTOR_DEBOUD = 500;
+export const SECTOR_DEBOUD = 0;
 
 export const CHUNK_SIZE = 1000;
 

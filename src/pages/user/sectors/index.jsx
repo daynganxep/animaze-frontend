@@ -4,27 +4,23 @@ import { useSelector } from 'react-redux';
 import L from 'leaflet';
 import SectorService from '@/services/sector.service';
 import { SectorDataParser } from '@/tools/data.tool';
-import { ANIMATION_MODE, EMPTY_SECTOR, MIN_VISIBLE_ZOOM, SECTOR_DEBOUD } from '@/configs/const.config';
+import { ANIMATION_MODE, EMPTY_SECTOR, MIN_VISIBLE_ZOOM } from '@/configs/const.config';
 import { useDispatch } from 'react-redux';
 import { animationActions } from '@/redux/slices/animation.slice';
 import { FRAMES_COUNT, SECTOR_SIZE, WORLD_DIMENSION } from '@/configs/env.config';
 import { useSectorsCache } from '@/hooks/use-sectors-cache';
-import { useDebounce } from '@/hooks/use-debounce';
-import { debounce } from 'lodash';
 
 import socket from '@/tools/socket.tool';
 
 export default function Sectors() {
-    const map = useMap();
-    const sectorsCache = useSectorsCache();
     const [visibleSectors, setVisibleSectors] = useState(new Set());
-    const subscribedSectorsRef = useRef(new Set());
-    const debouncedVisibleSectors = useDebounce(visibleSectors, SECTOR_DEBOUD);
     const { mode, frame, speed } = useSelector((state) => state.animation);
+    const { paintMode, update } = useSelector(state => state.ui);
+    const sectorsCache = useSectorsCache();
+    const subscribedSectorsRef = useRef(new Set());
     const dispatch = useDispatch();
     const layerRef = useRef(L.layerGroup()).current;
-    const { paintMode } = useSelector(state => state.ui);
-
+    const map = useMap();
 
     useEffect(() => {
         const frameInterval = setInterval(() => {
@@ -65,19 +61,48 @@ export default function Sectors() {
         setVisibleSectors(newVisible);
     }, [map, layerRef, paintMode]);
 
-    const debouncedUpdateVisibleSectors = useCallback(debounce(updateVisibleSectors, SECTOR_DEBOUD), [updateVisibleSectors]);
+    const renderVisibleSectors = useCallback(() => {
+        console.log("renderVisibleSectors");
+        visibleSectors.forEach((sectorId) => {
+            const sector = sectorsCache.get(sectorId);
+            if (!sector || !sector.frameCanvases) return;
+
+            const canvas = sector.frameCanvases[frame];
+            if (!canvas) return;
+
+            const [x, y] = sectorId.split(':').map(Number);
+            const bounds = [
+                [y * SECTOR_SIZE, x * SECTOR_SIZE],
+                [(y + 1) * SECTOR_SIZE, (x + 1) * SECTOR_SIZE],
+            ];
+
+            const existing = layerRef.getLayers().find((l) => l.options && l.options.sectorId === sectorId);
+
+            if (existing) {
+                existing.setUrl(canvas.toDataURL());
+            } else {
+                const overlay = L.imageOverlay(canvas.toDataURL(), bounds, {
+                    interactive: true,
+                    className: 'pixelated-canvas',
+                    sectorId,
+                });
+                overlay.addTo(layerRef);
+            }
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [frame, layerRef, visibleSectors]);
 
     useMapEvents({
-        moveend: debouncedUpdateVisibleSectors,
-        zoomend: debouncedUpdateVisibleSectors,
-        viewreset: debouncedUpdateVisibleSectors,
-        load: debouncedUpdateVisibleSectors,
+        moveend: updateVisibleSectors,
+        zoomend: updateVisibleSectors,
+        viewreset: updateVisibleSectors,
+        load: updateVisibleSectors,
     });
 
     // Handle WebSocket subscriptions
     useEffect(() => {
         const oldSectors = subscribedSectorsRef.current;
-        const newSectors = debouncedVisibleSectors;
+        const newSectors = visibleSectors;
 
         const toUnsubscribe = [...oldSectors].filter(s => !newSectors.has(s));
         const toSubscribe = [...newSectors].filter(s => !oldSectors.has(s));
@@ -91,12 +116,12 @@ export default function Sectors() {
         }
 
         subscribedSectorsRef.current = newSectors;
-    }, [debouncedVisibleSectors]);
+    }, [visibleSectors]);
 
 
     useEffect(() => {
-        const fetchNewSectors = async () => {
-            const fetchPromises = Array.from(debouncedVisibleSectors).map(async (sectorId) => {
+        (async () => {
+            const fetchPromises = Array.from(visibleSectors).map(async (sectorId) => {
                 const cached = sectorsCache.get(sectorId);
                 if (cached === EMPTY_SECTOR) return null;
                 if (cached) return { sectorId, data: cached };
@@ -139,11 +164,14 @@ export default function Sectors() {
 
             const results = await Promise.all(fetchPromises);
             results.forEach((result) => result && sectorsCache.set(result.sectorId, result.data));
-        };
-
-        fetchNewSectors();
+            console.log("Fetch sector");
+            await renderVisibleSectors();
+        })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [debouncedVisibleSectors]);
+    }, [visibleSectors, update]);
+
+
+    /*
 
     useEffect(() => {
         visibleSectors.forEach((sectorId) => {
@@ -173,7 +201,10 @@ export default function Sectors() {
             }
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [frame, visibleSectors, layerRef]);
+    }, [frame, layerRef, visibleSectors]);
+
+
+    */
 
     useEffect(() => {
         layerRef.addTo(map);

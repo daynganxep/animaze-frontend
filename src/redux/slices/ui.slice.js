@@ -1,14 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getLS } from "@/tools/local-storage.tool";
 import { setStates } from "@/tools/store.tool";
 
-const initialState = getLS("ui", { paintMode: false, signInDialog: false });
+const initialState = { paintMode: false, signInDialog: false, update: null };
 
 const uiSlice = createSlice({
     name: "ui",
     initialState,
     reducers: {
-        setStates: setStates(initialState)
+        setStates: setStates(initialState),
+        forceUpdate: (state) => {
+            state.update = (new Date()).toISOString()
+        }
     },
 });
 
