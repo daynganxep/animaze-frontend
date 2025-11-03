@@ -15,13 +15,13 @@ import socket from '@/tools/socket.tool';
 export default function Sectors() {
     const [visibleSectors, setVisibleSectors] = useState(new Set());
     const { mode, frame, speed } = useSelector((state) => state.animation);
-    const { paintMode, updatedSector } = useSelector(state => state.ui);
+    const { paintMode, rerender } = useSelector(state => state.ui);
     const sectorsCache = useSectorsCache();
     const subscribedSectorsRef = useRef(new Set());
     const dispatch = useDispatch();
     const layerRef = useRef(L.layerGroup()).current;
+    const [rerenderAll, setRerenderAll] = useState();
     const map = useMap();
-    const [rerender, setRender] = useState();
 
     useEffect(() => {
         const frameInterval = setInterval(() => {
@@ -98,7 +98,7 @@ export default function Sectors() {
             }
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [frame, layerRef, rerender]);
+    }, [frame, layerRef, rerenderAll]);
 
     // Handle WebSocket subscriptions
     useEffect(() => {
@@ -109,11 +109,11 @@ export default function Sectors() {
         const toSubscribe = [...newSectors].filter(s => !oldSectors.has(s));
 
         if (toUnsubscribe.length > 0) {
-            toUnsubscribe.forEach(sectorId => socket.emit('unsubscribe', sectorId));
+            socket.emit('unsubscribe', Array.from(toUnsubscribe.values()).join(";"));
         }
 
         if (toSubscribe.length > 0) {
-            toSubscribe.forEach(sectorId => socket.emit('subscribe', sectorId));
+            socket.emit('subscribe', Array.from(toSubscribe.values()).join(";"));
         }
 
         subscribedSectorsRef.current = newSectors;
@@ -165,15 +165,15 @@ export default function Sectors() {
             const fetchPromises = Array.from(visibleSectors).map(fetchPromise);
             const results = await Promise.all(fetchPromises);
             results.forEach((result) => result && sectorsCache.set(result.sectorId, result.data));
-            setRender((new Date()).toISOString())
+            setRerenderAll((new Date()).toISOString())
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [visibleSectors]);
 
     // Handle Render updated sector
     const renderVisibleSector = useCallback(() => {
-        if (!updatedSector) return;
-        const { sectorId } = updatedSector;
+        if (!rerender) return;
+        const { sectorId } = rerender;
         const sector = sectorsCache.get(sectorId);
         if (!sector || !sector.frameCanvases) return;
 
@@ -198,7 +198,7 @@ export default function Sectors() {
             });
             overlay.addTo(layerRef);
         }
-    }, [frame, layerRef, updatedSector, sectorsCache]);
+    }, [frame, layerRef, rerender, sectorsCache]);
 
     // Handle fetch updated sector
     useEffect(() => {
@@ -244,14 +244,14 @@ export default function Sectors() {
                 return { sectorId, data: { ...data, frameCanvases } };
             }
 
-            if (!updatedSector) return;
-            const { sectorId } = updatedSector;
+            if (!rerender) return;
+            const { sectorId } = rerender;
             const result = await fetchPromise(sectorId)
             result && sectorsCache.set(result.sectorId, result.data)
             await renderVisibleSector();
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [visibleSectors, updatedSector]);
+    }, [visibleSectors, rerender]);
 
     useEffect(() => {
         layerRef.addTo(map);

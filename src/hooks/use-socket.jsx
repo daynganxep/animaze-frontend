@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import socket from '@/tools/socket.tool';
 import { useSectorsCache } from './use-sectors-cache';
 import { useDispatch } from 'react-redux';
 import { uiActions } from '@/redux/slices/ui.slice';
+import socket from '@/tools/socket.tool';
 
 export function useSocket() {
   const sectorsCache = useSectorsCache();
@@ -17,7 +17,7 @@ export function useSocket() {
       }
       console.log(`%cReceived sector update from server: ${sectorId}`, 'color: #ff9900');
       sectorsCache.del(sectorId);
-      dispatch(uiActions.forceUpdate(sectorId));
+      dispatch(uiActions.triggerRerender(sectorId));
     };
 
     socket.on('sector_updated', handleSectorUpdate);
@@ -26,5 +26,5 @@ export function useSocket() {
     return () => {
       socket.off('sector_updated', handleSectorUpdate);
     };
-  }, [sectorsCache]); // Dependency array ensures the effect runs only once
+  }, [sectorsCache, dispatch]); // Dependency array ensures the effect runs only once
 }

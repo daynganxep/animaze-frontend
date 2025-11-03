@@ -3,7 +3,6 @@ import get from 'lodash/set';
 import cloneDeep from 'lodash/cloneDeep';
 
 export function setStates(defaultValue) {
-
     return function (state, { payload }) {
         const { field, value, reset } = payload;
         if (reset) {
