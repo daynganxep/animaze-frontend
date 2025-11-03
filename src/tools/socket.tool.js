@@ -2,7 +2,7 @@ import { io } from 'socket.io-client';
 import { API_URL } from '@/configs/env.config';
 
 // The URL should point to the base of your backend server, without the /api/v1 path
-const SOCKET_URL = API_URL.replace('/api/v1', '');
+const SOCKET_URL = new URL(API_URL).origin;
 
 const socket = io(SOCKET_URL, {
   transports: ['websocket'], // Force WebSocket connection for consistency

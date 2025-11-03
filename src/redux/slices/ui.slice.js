@@ -1,18 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { setStates } from "@/tools/store.tool";
 
-const initialState = { paintMode: false, signInDialog: false, updatedSector: null };
+const initialState = {
+    paintMode: false,
+    signInDialog: false,
+    rerender: null
+};
 
 const uiSlice = createSlice({
     name: "ui",
     initialState,
     reducers: {
         setStates: setStates(initialState),
-        forceUpdate: (state, { payload }) => {
-            state.updatedSector = { sectorId: payload };
+        triggerRerender: (state, { payload }) => {
+            state.rerender = { sectorId: payload, timestampes: (new Date()).toISOString() };
         }
-    },
-});
+    }
+})
 
 export const uiActions = uiSlice.actions;
-export const uiReducer = uiSlice.reducer;
+export const uiReducer = uiSlice.reducer; 
